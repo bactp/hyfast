@@ -262,3 +262,19 @@ sudo rm -rf /var/lib/docker /etc/docker
 sudo groupdel docker
 sudo rm -rf /var/run/docker.sock
 ```
+
+
+# cinder and resize volume
+
+1. Use Space from Extended Physical (or Virtual) Disk
+
+extend the LV to use up all the VG’s free space with
+```
+lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+```
+
+2. check the LV one more time with `lvdisplay` to make sure it has been extended
+3. Resize the file system to make the additional 100% space usable
+```
+resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+```
