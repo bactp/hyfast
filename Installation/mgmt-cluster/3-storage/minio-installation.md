@@ -83,7 +83,7 @@ Generated 'drives.yaml' successfully.
 
 If you also wish to see Unavailable disks, use the --all option
 ```
-kubectl directpv discovery --all
+kubectl directpv discover --all
 ```
 ```
 Discovered node 'hyfast-fmas-node' ✔
@@ -160,6 +160,11 @@ This will show information about the drives formatted and added to DirectPV
 
 0 B/1.7 TiB used, 0 volumes, 4 drives
 
+```
+
+6. Change directpv-min-io to default storage class
+```
+kubectl patch storageclass directpv-min-io -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
 
 # Installing MinIO Operator with krew
