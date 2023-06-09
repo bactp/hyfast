@@ -19,6 +19,8 @@ helm pull prometheus-community/kube-prometheus-stack --untar
 Edit remote write url
 ```
 - url: http://<ingress-host>/api/v1/push
+  headers:
+           X-Scope-OrgId: <cluster-name>
 ```
 
 Install prometheus-helm-chart
