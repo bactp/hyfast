@@ -31,6 +31,7 @@ Typically commands that use the system package manager in this section must be r
 sudo apt update
 sudo apt upgrade
 sudo apt install python3-dev python3-venv libffi-dev gcc libssl-dev git
+sudo apt install python3-venv
 ```
 2. Create a virtual environment and activate it.
 
@@ -44,7 +45,8 @@ pip install -U pip
 ```
 4. Install Ansible.
 ```
-pip install 'ansible>=4, <6'
+pip install 'ansible-core>=2.13,<=2.14.2'
+pip install 'ansible>=6,<8'
 ```
 
 ## Install kolla-ansible
@@ -189,7 +191,7 @@ vi kolla-openstack/share/kolla-ansible/init-runonce
 ```
 ENABLE_EXT_NET=${ENABLE_EXT_NET:-1}
 EXT_NET_CIDR=${EXT_NET_CIDR:-'192.168.24.0/24'}
-EXT_NET_RANGE=${EXT_NET_RANGE:-'start=192.168.24.xx,end=192.168.122.yy'}
+EXT_NET_RANGE=${EXT_NET_RANGE:-'start=192.168.24.xx,end=192.168.24.yy'}
 EXT_NET_GATEWAY=${EXT_NET_GATEWAY:-'192.168.24.1'}
 ```
 

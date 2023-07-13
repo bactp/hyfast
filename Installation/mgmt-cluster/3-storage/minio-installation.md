@@ -182,6 +182,18 @@ Login Token
 ```
 kubectl -n minio-operator get secret $(kubectl -n minio-operator get serviceaccount console-sa -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
 ```
+```
+SA_TOKEN=$(kubectl -n minio-operator  get secret console-sa-secret -o jsonpath="{.data.token}" | base64 --decode)
+echo $SA_TOKEN
+```
+
+```
+kubectl -n minio-operator  get secret console-sa-secret -o jsonpath="{.data.token}" | base64 --decode
+```
+
+```
+eyJhbGciOiJSUzI1NiIsImtpZCI6IjVMRkhyVXVtMDRMVGFNRk02b1hUUFZUMW1Ec2k3MFVNa3NyUkZJVWJucTgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtaW5pby1vcGVyYXRvciIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjb25zb2xlLXNhLXNlY3JldCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjb25zb2xlLXNhIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiYzRhYjJiYTktOTExZC00MDNhLTlmZDctNWFiODNmMTBmZTU5Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Om1pbmlvLW9wZXJhdG9yOmNvbnNvbGUtc2EifQ.Hl2BRouEQPKPJwID9ESRWpvpDwivuxFW3ab0aGKHPup91MkpiyMsgFoE77TT5NBnxiiOx7B6wZGDG1TXEwu8J43YHo-gZlIMp3f5NS_0SDRXVN1b_H1X5h9gNhxIaPXEFYesxQg0iQKBtY6jdwWtCVseukGUC83Y_kPuFcSYBGaFwiokj_ygUfUakaErh5LPVGBF79XhudlcbXGQ1TeGCiSaxT5w7sTmPTPIDO6rUbNkTJCzvYoBDbS8_wGz23BbGVouFdG2R7ET5Fum4YtHpJzGhSnukaC5S2ykgv0mZ0wU2MS75nmGm_CQ99IhLPqoK1IWTR0pMbjmRegNn2EBhQ
+```
 
 # Create new partition in linux
 References: https://phoenixnap.com/kb/linux-create-partition 
@@ -225,4 +237,10 @@ creat partitions linux
 4. Verify that partition is created by running the following cmd:
 ```
 sudo fdisk -l
+```
+
+Get token for Minio Operator login
+```
+kubectl -n minio-operator get secret $(kubectl -n minio-operator get serviceaccount console-sa -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
+
 ```
