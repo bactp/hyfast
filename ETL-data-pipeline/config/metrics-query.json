@@ -1,0 +1,28 @@
+{
+    "compute_host": {
+                    
+
+    },
+    "cluster": {
+        "fact": {},
+        "dim": {},
+            "instance": {
+                "fact": {},
+                "dim": {}
+            },
+            "pod": {
+                "fact": {},
+                "dim": {}
+            },
+            "container": {
+                "dim": {}
+            },
+            "service": {
+
+            }
+    },
+    "virtual_machine": {
+
+    }
+
+}
