@@ -8,19 +8,6 @@ cluster:
     cluster_PodMemUsage_Gib: sum (container_memory_working_set_bytes{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}) by (pod_name)/1000000000
     cluster_PodNetIn_kBs: sum (rate (container_network_receive_bytes_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[2m])) by (pod_name) /1000
     cluster_PodNetOutt_kBs: sum (rate (container_network_transmit_bytes_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[2m])) by (pod_name) /1000
-cluster_instance:
-    cluster_instance_cpu_utilization: instance:node_cpu_utilisation:rate5m
-    cluster_instance_cpu_rate_sum: instance:node_cpu_rate:sum
-    cluster_instance_load1_per_cpu: instance:node_load1_per_cpu:ratio
-    cluster_instance_mem_utilization: instance:node_memory_utilisation:ratio
-    cluster_instance_netin_bytes_wo_lo: instance:node_network_receive_bytes_excluding_lo:rate5m
-    cluster_instance_netin_bytes_total: instance:node_network_receive_bytes:rate:sum
-    cluster_instance_netin_drop_wo_lo: instance:node_network_receive_drop_excluding_lo:rate5m
-    cluster_instance_netout_bytes_wo_lo: instance:node_network_transmit_bytes_excluding_lo:rate5m
-    cluster_instance_netout_bytes_total: instance:node_network_transmit_bytes:rate:sum
-    cluster_instance_netout_drop_wo_lo: instance:node_network_transmit_drop_excluding_lo:rate5m
-    cluster_instance_disk_io_time: instance_device:node_disk_io_time_seconds:rate5m
-    cluster_instance_disk_io_time_wght: instance_device:node_disk_io_time_weighted_seconds:rate5m
 
 compute_host:
     host_cpu_utilization: instance:node_cpu_utilisation:rate5m
@@ -35,3 +22,52 @@ compute_host:
     host_netout_drop_wo_lo: instance:node_network_transmit_drop_excluding_lo:rate5m
     host_disk_io_time: instance_device:node_disk_io_time_seconds:rate5m
     host_disk_io_time_wght: instance_device:node_disk_io_time_weighted_seconds:rate5m
+
+cluster_instance:
+    cluster_instance_cpu_utilization: instance:node_cpu_utilisation:rate5m
+    cluster_instance_cpu_rate_sum: instance:node_cpu_rate:sum
+    cluster_instance_load1_per_cpu: instance:node_load1_per_cpu:ratio
+    cluster_instance_mem_utilization: instance:node_memory_utilisation:ratio
+    cluster_instance_netin_bytes_wo_lo: instance:node_network_receive_bytes_excluding_lo:rate5m
+    cluster_instance_netin_bytes_total: instance:node_network_receive_bytes:rate:sum
+    cluster_instance_netin_drop_wo_lo: instance:node_network_receive_drop_excluding_lo:rate5m
+    cluster_instance_netout_bytes_wo_lo: instance:node_network_transmit_bytes_excluding_lo:rate5m
+    cluster_instance_netout_bytes_total: instance:node_network_transmit_bytes:rate:sum
+    cluster_instance_netout_drop_wo_lo: instance:node_network_transmit_drop_excluding_lo:rate5m
+    cluster_instance_disk_io_time: instance_device:node_disk_io_time_seconds:rate5m
+    cluster_instance_disk_io_time_wght: instance_device:node_disk_io_time_weighted_seconds:rate5m
+
+cluster_namespace:
+    container: #change namespace
+        cluster_ns_container_cpu_usage: sum(rate(container_cpu_usage_seconds_total{namespace="sock-shop", name=~".+"}[30m])) by (name) * 100 #counter-Cumulative cpu time consumed
+        cluster_ns_container_cpu_cfs_periods_total: sum(rate(container_cpu_cfs_periods_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter-Number of elapsed enforcement period intervals
+        cluster_ns_container_cpu_cfs_throttled_periods_total: sum(rate(container_cpu_cfs_throttled_periods_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter-Number of throttled period intervals
+
+        cluster_ns_container_mem_usage_bytes: sum(container_memory_usage_bytes{namespace="sock-shop", name=~".+"}) by (name)  #gauge-Current memory usage, including all memory regardless of when it was accessed
+        cluster_ns_container_mem_max_usage_bytes: sum(container_memory_max_usage_bytes{namespace="sock-shop", name=~".+"}) by (name)  #gauge-Maximum memory usage recored 
+        cluster_ns_container_mem_rss_KiB: sum(container_memory_rss{namespace="sock-shop", name=~".+"}) by (name)  #gauge-size of rss
+        cluster_ns_container_mem_working_set_bytes: sum(container_memory_working_set_bytes{namespace="sock-shop", name=~".+"}) by (name)  #gauge-current working set in bytes
+        cluster_ns_container_mem_cache_KiB: sum(container_memory_cache{namespace="sock-shop", name=~".+"}) by (name)    #gauge-Number of bytes of page cache memory
+        cluster_ns_container_mem_failures_total: sum(rate(container_memory_failures_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter-cumulative count of memory allocation failure
+        cluster_ns_container_memory_failcnt: sum(rate(container_memory_failcnt{namespace="sock-shop", name=~".+"}[60m])) by (name)  #counter-number of mem usage hits limits
+
+        cluster_ns_container_fs_inodes_free: sum(container_fs_inodes_free{namespace="sock-shop", name=~".+"}) by (name) #gauge-Number of available Inodes
+        cluster_ns_container_fs_inodes_total: sum(container_fs_inodes_total{namespace="sock-shop", name=~".+"}) by (name) #gauge-Total number of Inodes
+        cluster_ns_container_usage_bytes: sum(container_fs_usage_bytes{namespace="sock-shop", name=~".+"}) by (name) #gauge- Number of bytes that are consumed by the container on this filesystem
+        cluster_ns_container_fs_reads_total: sum(rate(container_fs_reads_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter - Cumulative count of reads completed
+        cluster_ns_container_fs_reads_bytes_total: sum(rate(container_fs_reads_bytes_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter - Number of bytes that are consumed by the container on this filesystem
+        cluster_ns_container_fs_read_seconds_total: sum(rate(container_fs_read_seconds_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter - Cumulative count of seconds spent reading
+        cluster_ns_container_fs_writes_total: sum(rate(container_fs_writes_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter - Cumulative count of writes completed
+        cluster_ns_container_fs_writes_bytes_total: sum(rate(container_fs_writes_bytes_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter - Cumulative count of bytes written
+        cluster_ns_container_fs_write_seconds_total: sum(rate(container_fs_write_seconds_total{namespace="sock-shop", name=~".+"}[30m])) by (name) #counter - Cumulative count of seconds spent writing
+
+        cluster_ns_container_network_receive_bytes_total: sum(rate(container_network_receive_bytes_total{namespace="sock-shop", name=~".+"}[5m])) by (name)  #counter - Cumulative count of bytes received
+        cluster_ns_container_network_receive_errors_total: sum(rate(container_network_receive_errors_total{namespace="sock-shop", name=~".+"}[5m])) by (name) #counter - Cumulative count of errors encountered while receiving
+        cluster_ns_container_network_receive_packets_dropped_total: sum(rate(container_network_receive_packets_dropped_total{namespace="sock-shop", name=~".+"}[5m])) by (name) #counter - Cumulative count of packets dropped while receiving
+        cluster_ns_container_network_receive_packets_total: sum(rate(container_network_receive_packets_total{namespace="sock-shop", name=~".+"}[5m])) by (name) #counter - Cumulative count of packets received
+        cluster_ns_container_network_transmit_bytes_total: sum(rate(container_network_transmit_bytes_total{namespace="sock-shop", name=~".+"}[5m])) by (name) #counter - Cumulative count of bytes transmitted
+        cluster_ns_container_network_transmit_errors_total: sum(rate(container_network_transmit_errors_total{namespace="sock-shop", name=~".+"}[5m])) by (name) #counter - Cumulative count of errors encountered while transmitting
+        cluster_ns_container_network_transmit_packets_dropped_total: sum(rate(container_network_transmit_packets_dropped_total{namespace="sock-shop", name=~".+"}[5m])) by (name) #counter - Cumulative count of packets dropped while transmitting
+        cluster_ns_container_network_transmit_packets_total: sum(rate(container_network_transmit_packets_total{namespace="sock-shop", name=~".+"}[5m])) by (name) #counter - Cumulative count of packets transmitted
+    pod: 
+    service:
