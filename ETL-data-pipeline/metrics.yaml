@@ -8,7 +8,30 @@ cluster:
     cluster_PodMemUsage_Gib: sum (container_memory_working_set_bytes{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}) by (pod_name)/1000000000
     cluster_PodNetIn_kBs: sum (rate (container_network_receive_bytes_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[2m])) by (pod_name) /1000
     cluster_PodNetOutt_kBs: sum (rate (container_network_transmit_bytes_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[2m])) by (pod_name) /1000
+cluster_instance:
+    cluster_instance_cpu_utilization: instance:node_cpu_utilisation:rate5m
+    cluster_instance_cpu_rate_sum: instance:node_cpu_rate:sum
+    cluster_instance_load1_per_cpu: instance:node_load1_per_cpu:ratio
+    cluster_instance_mem_utilization: instance:node_memory_utilisation:ratio
+    cluster_instance_netin_bytes_wo_lo: instance:node_network_receive_bytes_excluding_lo:rate5m
+    cluster_instance_netin_bytes_total: instance:node_network_receive_bytes:rate:sum
+    cluster_instance_netin_drop_wo_lo: instance:node_network_receive_drop_excluding_lo:rate5m
+    cluster_instance_netout_bytes_wo_lo: instance:node_network_transmit_bytes_excluding_lo:rate5m
+    cluster_instance_netout_bytes_total: instance:node_network_transmit_bytes:rate:sum
+    cluster_instance_netout_drop_wo_lo: instance:node_network_transmit_drop_excluding_lo:rate5m
+    cluster_instance_disk_io_time: instance_device:node_disk_io_time_seconds:rate5m
+    cluster_instance_disk_io_time_wght: instance_device:node_disk_io_time_weighted_seconds:rate5m
 
 compute_host:
-    host_CPU_Utilization: instance:node_cpu_utilisation:rate5m
-    host_
+    host_cpu_utilization: instance:node_cpu_utilisation:rate5m
+    host_cpu_rate_sum: instance:node_cpu_rate:sum
+    host_load1_per_cpu: instance:node_load1_per_cpu:ratio
+    host_mem_utilization: instance:node_memory_utilisation:ratio
+    host_netin_bytes_wo_lo: instance:node_network_receive_bytes_excluding_lo:rate5m
+    host_netin_bytes_total: instance:node_network_receive_bytes:rate:sum
+    host_netin_drop_wo_lo: instance:node_network_receive_drop_excluding_lo:rate5m
+    host_netout_bytes_wo_lo: instance:node_network_transmit_bytes_excluding_lo:rate5m
+    host_netout_bytes_total: instance:node_network_transmit_bytes:rate:sum
+    host_netout_drop_wo_lo: instance:node_network_transmit_drop_excluding_lo:rate5m
+    host_disk_io_time: instance_device:node_disk_io_time_seconds:rate5m
+    host_disk_io_time_wght: instance_device:node_disk_io_time_weighted_seconds:rate5m
