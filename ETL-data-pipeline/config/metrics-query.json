@@ -1,28 +1,79 @@
 {
     "compute_host": {
-                    
-
+            "host_cpu_utilization": "instance:node_cpu_utilisation:rate5m",
+            "host_cpu_rate_sum": "instance:node_cpu_rate:sum",
+            "host_load1_per_cpu": "instance:node_load1_per_cpu:ratio",
+            "host_mem_utilization": "instance:node_memory_utilisation:ratio",
+            "host_netin_bytes_wo_lo": "instance:node_network_receive_bytes_excluding_lo:rate5m",
+            "host_netin_bytes_total": "instance:node_network_receive_bytes:rate:sum",
+            "host_netin_drop_wo_lo": "instance:node_network_receive_drop_excluding_lo:rate5m",
+            "host_netout_bytes_wo_lo": "instance:node_network_transmit_bytes_excluding_lo:rate5m",
+            "host_netout_bytes_total": "instance:node_network_transmit_bytes:rate:sum",
+            "host_netout_drop_wo_lo": "instance:node_network_transmit_drop_excluding_lo:rate5m",
+            "host_disk_io_time": "instance_device:node_disk_io_time_seconds:rate5m",
+            "host_disk_io_time_wght": "instance_device:node_disk_io_time_weighted_seconds:rate5m"
     },
     "cluster": {
-        "fact": {},
-        "dim": {},
             "instance": {
-                "fact": {},
-                "dim": {}
+            "cluster_instance_cpu_utilization": "instance:node_cpu_utilisation:rate5m",
+            "cluster_instance_cpu_rate_sum": "instance:node_cpu_rate:sum",
+            "cluster_instance_load1_per_cpu": "instance:node_load1_per_cpu:ratio",
+            "cluster_instance_mem_utilization": "instance:node_memory_utilisation:ratio",
+            "cluster_instance_netin_bytes_wo_lo": "instance:node_network_receive_bytes_excluding_lo:rate5m",
+            "cluster_instance_netin_bytes_total": "instance:node_network_receive_bytes:rate:sum",
+            "cluster_instance_netin_drop_wo_lo": "instance:node_network_receive_drop_excluding_lo:rate5m",
+            "cluster_instance_netout_bytes_wo_lo": "instance:node_network_transmit_bytes_excluding_lo:rate5m",
+            "cluster_instance_netout_bytes_total": "instance:node_network_transmit_bytes:rate:sum",
+            "cluster_instance_netout_drop_wo_lo": "instance:node_network_transmit_drop_excluding_lo:rate5m",
+            "cluster_instance_disk_io_time": "instance_device:node_disk_io_time_seconds:rate5m",
+            "cluster_instance_disk_io_time_wght": "instance_device:node_disk_io_time_weighted_seconds:rate5m"
             },
-            "pod": {
-                "fact": {},
-                "dim": {}
-            },
-            "container": {
-                "dim": {}
-            },
-            "service": {
+
+            "name_space": {
+                "container": {
+                    "cluster_ns_container_cpu_usage": "sum(rate(container_cpu_usage_seconds_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container) * 100", 
+                    "cluster_ns_container_cpu_cfs_periods_total": "sum(rate(container_cpu_cfs_periods_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)",  
+                    "cluster_ns_container_cpu_cfs_throttled_periods_total": "sum(rate(container_cpu_cfs_throttled_periods_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)",  
+
+                    "cluster_ns_container_mem_usage_bytes": "sum(container_memory_usage_bytes{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}) by (container)",
+                    "cluster_ns_container_mem_max_usage_bytes": "sum(container_memory_max_usage_bytes{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}) by (container)",  
+                    "cluster_ns_container_mem_rss_KiB": "sum(container_memory_rss{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}) by (container)",
+                    "cluster_ns_container_mem_working_set_bytes": "sum(container_memory_working_set_bytes{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}) by (container)",
+                    "cluster_ns_container_mem_cache_KiB": "sum(container_memory_cache{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}) by (container)",
+                    "cluster_ns_container_mem_failures_total": "sum(rate(container_memory_failures_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)",
+                    "cluster_ns_container_memory_failcnt": "sum(rate(container_memory_failcnt{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[60m])) by (container)",
+
+                    "cluster_ns_container_fs_inodes_free": "sum(container_fs_inodes_free{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}) by (container)",
+                    "cluster_ns_container_fs_inodes_total": "sum(container_fs_inodes_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}) by (container)", 
+                    "cluster_ns_container_usage_bytes": "sum(container_fs_usage_bytes{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}) by (container)",
+                    "cluster_ns_container_fs_reads_total": "sum(rate(container_fs_reads_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)", 
+                    "cluster_ns_container_fs_reads_bytes_total": "sum(rate(container_fs_reads_bytes_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)", 
+                    "cluster_ns_container_fs_read_seconds_total": "sum(rate(container_fs_read_seconds_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)", 
+                    "cluster_ns_container_fs_writes_total": "sum(rate(container_fs_writes_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)", 
+                    "cluster_ns_container_fs_writes_bytes_total": "sum(rate(container_fs_writes_bytes_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)", 
+                    "cluster_ns_container_fs_write_seconds_total": "sum(rate(container_fs_write_seconds_total{namespace=\"sock-shop\", container=~\".+\", container!=\"POD\"}[30m])) by (container)", 
+
+                    "cluster_ns_container_network_receive_bytes_total": "sum(rate(container_network_receive_bytes_total{namespace=\"sock-shop\", name=~\".+\"}[5m])) by (name)",  
+                    "cluster_ns_container_network_receive_errors_total": "sum(rate(container_network_receive_errors_total{namespace=\"sock-shop\", name=~\".+\"}[5m])) by (name)", 
+                    "cluster_ns_container_network_receive_packets_dropped_total": "sum(rate(container_network_receive_packets_dropped_total{namespace=\"sock-shop\", name=~\".+\"}[5m])) by (name)", 
+                    "cluster_ns_container_network_receive_packets_total": "sum(rate(container_network_receive_packets_total{namespace=\"sock-shop\", name=~\".+\"}[5m])) by (name)", 
+                    "cluster_ns_container_network_transmit_bytes_total": "sum(rate(container_network_transmit_bytes_total{namespace=\"sock-shop\", name=~\".+\"}[5m])) by (name)", 
+                    "cluster_ns_container_network_transmit_errors_total": "sum(rate(container_network_transmit_errors_total{namespace=\"sock-shop\", name=~\".+\"}[5m])) by (name)", 
+                    "cluster_ns_container_network_transmit_packets_dropped_total": "sum(rate(container_network_transmit_packets_dropped_total{namespace=\"sock-shop\", name=~\".+\"}[5m])) by (name)", 
+                    "cluster_ns_container_network_transmit_packets_total": "sum(rate(container_network_transmit_packets_total{namespace=\"sock-shop\", name=~\".+\"}[5m])) by (name)", 
+                    
+                    "cluster_ns_container_status_restarts_total": "sum(kube_pod_container_status_restarts_total{namespace=\"sock-shop\", container=~\".+\"})) by (container)", 
+                    "cluster_ns_container_status_restarts_1h": "sum(rate(kube_pod_container_status_restarts_total{namespace=\"sock-shop\", container=~\".+\"}[60m])) by (container)", 
+                    "cluser_ns_container_status_ready": "count(kube_pod_container_status_ready{namespace=\"sock-shop\", container=~\".+\", job=~\"kube-state-metrics\"}) by (container)",
+                    "cluster_ns_container_status_running": "count(kube_pod_container_status_running{namespace=\"sock-shop\", container=~\".+\", job=~\"kube-state-metrics\"}) by (container)", 
+                    "cluster_ns_container_status_waiting": "count(kube_pod_container_status_running{namespace=\"sock-shop\", container=~\".+\", job=~\"kube-state-metrics\"}) by (container)",
+                    "cluster_ns_container_status_terminated": "count(kube_pod_container_status_running{namespace=\"sock-shop\", container=~\".+\", job=~\"kube-state-metrics\"}) by (container)" 
+                },
+                "pod": {
+                    "cluster_ns_pod_status_scheduled": "count(kube_pod_status_scheduled{condition=\"true\", container=\"kube-state-metrics\", namespace=~\"sock-shop\"}) by (pod)", 
+                    "cluster_ns_pod_status_ready": "count(kube_pod_status_ready{condition=\"true\", container=\"kube-state-metrics\", namespace=~\"sock-shop\"}) by (pod)" 
+                }
 
             }
-    },
-    "virtual_machine": {
-
     }
-
 }
