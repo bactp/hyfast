@@ -9,33 +9,33 @@ cluster:
     cluster_PodNetIn_kBs: sum (rate (container_network_receive_bytes_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[5m])) by (pod_name) /1000
     cluster_PodNetOutt_kBs: sum (rate (container_network_transmit_bytes_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[5m])) by (pod_name) /1000
 
-compute_host:
-    host_cpu_utilization: instance:node_cpu_utilisation:rate5m
-    host_cpu_rate_sum: instance:node_cpu_rate:sum
-    host_load1_per_cpu: instance:node_load1_per_cpu:ratio
-    host_mem_utilization: instance:node_memory_utilisation:ratio
-    host_netin_bytes_wo_lo: instance:node_network_receive_bytes_excluding_lo:rate5m
-    host_netin_bytes_total: instance:node_network_receive_bytes:rate:sum
-    host_netin_drop_wo_lo: instance:node_network_receive_drop_excluding_lo:rate5m
-    host_netout_bytes_wo_lo: instance:node_network_transmit_bytes_excluding_lo:rate5m
-    host_netout_bytes_total: instance:node_network_transmit_bytes:rate:sum
-    host_netout_drop_wo_lo: instance:node_network_transmit_drop_excluding_lo:rate5m
-    host_disk_io_time: instance_device:node_disk_io_time_seconds:rate5m
-    host_disk_io_time_wght: instance_device:node_disk_io_time_weighted_seconds:rate5m
+compute_host: #OrgID
+    host_cpu_utilization: sum(instance:node_cpu_utilisation:rate5m) by (instance)
+    host_cpu_rate_sum: sum(instance:node_cpu:rate:sum) by (instance)
+    host_load1_per_cpu: sum(instance:node_load1_per_cpu:ratio) by (instance)
+    host_mem_utilization: sum(instance:node_load1_per_cpu:ratio) by (instance)
+    host_netin_bytes_wo_lo: sum(instance:node_network_receive_bytes_excluding_lo:rate5m) by (instance)
+    host_netin_bytes_total: sum(instance:node_network_receive_bytes:rate:sum) by (instance)
+    host_netin_drop_wo_lo: sum(instance:node_network_receive_drop_excluding_lo:rate5m) by (instance)
+    host_netout_bytes_wo_lo: sum(instance:node_network_transmit_bytes_excluding_lo:rate5m) by (instance)
+    host_netout_bytes_total: sum(instance:node_network_transmit_bytes:rate:sum) by (instance)
+    host_netout_drop_wo_lo: sum(instance:node_network_transmit_drop_excluding_lo:rate5m) by (instance)
+    host_disk_io_time: sum(instance_device:node_disk_io_time_seconds:rate5m) by (instance)
+    host_disk_io_time_wght: sum(instance_device:node_disk_io_time_weighted_seconds:rate5m) by (instance)
 
-cluster_instance:
-    cluster_instance_cpu_utilization: instance:node_cpu_utilisation:rate5m
-    cluster_instance_cpu_rate_sum: instance:node_cpu_rate:sum
-    cluster_instance_load1_per_cpu: instance:node_load1_per_cpu:ratio
-    cluster_instance_mem_utilization: instance:node_memory_utilisation:ratio
-    cluster_instance_netin_bytes_wo_lo: instance:node_network_receive_bytes_excluding_lo:rate5m
-    cluster_instance_netin_bytes_total: instance:node_network_receive_bytes:rate:sum
-    cluster_instance_netin_drop_wo_lo: instance:node_network_receive_drop_excluding_lo:rate5m
-    cluster_instance_netout_bytes_wo_lo: instance:node_network_transmit_bytes_excluding_lo:rate5m
-    cluster_instance_netout_bytes_total: instance:node_network_transmit_bytes:rate:sum
-    cluster_instance_netout_drop_wo_lo: instance:node_network_transmit_drop_excluding_lo:rate5m
-    cluster_instance_disk_io_time: instance_device:node_disk_io_time_seconds:rate5m
-    cluster_instance_disk_io_time_wght: instance_device:node_disk_io_time_weighted_seconds:rate5m
+cluster_instance: #OrgID
+    cluster_instance_cpu_utilization: sum(instance:node_cpu_utilisation:rate5m) by (instance)
+    cluster_instance_cpu_rate_sum: sum(instance:node_cpu:rate:sum) by (instance)
+    cluster_instance_load1_per_cpu: sum(instance:node_load1_per_cpu:ratio) by (instance)
+    cluster_instance_mem_utilization: sum(instance:node_load1_per_cpu:ratio) by (instance)
+    cluster_instance_netin_bytes_wo_lo: sum(instance:node_network_receive_bytes_excluding_lo:rate5m) by (instance)
+    cluster_instance_netin_bytes_total: sum(instance:node_network_receive_bytes:rate:sum) by (instance)
+    cluster_instance_netin_drop_wo_lo: sum(instance:node_network_receive_drop_excluding_lo:rate5m) by (instance)
+    cluster_instance_netout_bytes_wo_lo: sum(instance:node_network_transmit_bytes_excluding_lo:rate5m) by (instance)
+    cluster_instance_netout_bytes_total: sum(instance:node_network_transmit_bytes:rate:sum) by (instance)
+    cluster_instance_netout_drop_wo_lo: sum(instance:node_network_transmit_drop_excluding_lo:rate5m) by (instance)
+    cluster_instance_disk_io_time: sum(instance_device:node_disk_io_time_seconds:rate5m) by (instance)
+    cluster_instance_disk_io_time_wght: sum(instance_device:node_disk_io_time_weighted_seconds:rate5m) by (instance)
 
 cluster_namespace:
     container: #change namespace
@@ -58,7 +58,7 @@ cluster_namespace:
         cluster_ns_container_fs_reads_bytes_total: sum(rate(container_fs_reads_bytes_total{namespace="sock-shop", container=~".+", container!="POD"}[30m])) by (container) #counter - Number of bytes that are consumed by the container on this filesystem
         cluster_ns_container_fs_read_seconds_total: sum(rate(container_fs_read_seconds_total{namespace="sock-shop", container=~".+", container!="POD"}[30m])) by (container) #counter - Cumulative count of seconds spent reading
         cluster_ns_container_fs_writes_total: sum(rate(container_fs_writes_total{namespace="sock-shop", container=~".+", container!="POD"}[30m])) by (container) #counter - Cumulative count of writes completed
-        cluster_ns_container_fs_writes_bytes_total: sum(rate(container_fs_writes_bytes_total{namespace="sock-shop", container=~".+", container!="POD"}[30m])) by (container) #counter - Cumulative count of bytes written
+        cluster_ns_container_fs_writes_bytes_total: sum(rate(container_fs_w)",rites_bytes_total{namespace="sock-shop", container=~".+", container!="POD"}[30m])) by (container) #counter - Cumulative count of bytes written
         cluster_ns_container_fs_write_seconds_total: sum(rate(container_fs_write_seconds_total{namespace="sock-shop", container=~".+", container!="POD"}[30m])) by (container) #counter - Cumulative count of seconds spent writing
 
         cluster_ns_container_network_receive_bytes_total: sum(rate(container_network_receive_bytes_total{namespace="sock-shop", name=~".+"}[5m])) by (name)  #counter - Cumulative count of bytes received
@@ -72,14 +72,27 @@ cluster_namespace:
         
         cluster_ns_container_status_restarts_total: sum(kube_pod_container_status_restarts_total{namespace="sock-shop", container=~".+"})) by (container) #counter - cummulative count of time restart
         cluster_ns_container_status_restarts_1h: sum(rate(kube_pod_container_status_restarts_total{namespace="sock-shop", container=~".+"}[60m])) by (container) #counter - cummulative count of time restart
-        cluser_ns_container_status_ready: count(kube_pod_container_status_ready{namespace="sock-shop", container=~".+", job=~"kube-state-metrics"}) by (container)
-        cluster_ns_container_status_running: count(kube_pod_container_status_running{namespace="sock-shop", container=~".+", job=~"kube-state-metrics"}) by (container) 
-        cluster_ns_container_status_waiting: count(kube_pod_container_status_running{namespace="sock-shop", container=~".+", job=~"kube-state-metrics"}) by (container)
-        cluster_ns_container_status_terminated: count(kube_pod_container_status_running{namespace="sock-shop", container=~".+", job=~"kube-state-metrics"}) by (container) 
+        cluser_ns_container_status_ready: sum(kube_pod_container_status_ready{namespace="sock-shop", container=~".+", job=~"kube-state-metrics"}) by (container)
+        cluster_ns_container_status_running: sum(kube_pod_container_status_running{namespace="sock-shop", container=~".+", job=~"kube-state-metrics"}) by (container) 
+        cluster_ns_container_status_waiting: sum(kube_pod_container_status_running{namespace="sock-shop", container=~".+", job=~"kube-state-metrics"}) by (container)
+        cluster_ns_container_status_terminated: sum(kube_pod_container_status_running{namespace="sock-shop", container=~".+", job=~"kube-state-metrics"}) by (container) 
 
 
     pod:
-        cluster_ns_pod_status_scheduled: count(kube_pod_status_scheduled{condition="true", container="kube-state-metrics", namespace=~"sock-shop"}) by (pod) #1 is oke and 0 is not scheduled
-        cluster_ns_pod_status_ready: count(kube_pod_status_ready{condition="true", container="kube-state-metrics", namespace=~"sock-shop"}) by (pod) #1 is oke and 0 is not scheduled 
-        # cluster_ns_pod_status_reason: count(kube_pod_status_reason{namespace=~"sock-shop"}, job="kube-state-metrics") by (pod, reason)
+        cluster_ns_pod_status_scheduled: sum(kube_pod_status_scheduled{namespace=~"sock-shop", container="kube-state-metrics", condition="true"}) by (pod)
+        cluster_ns_pod_status_unscheduled: sum(kube_pod_status_scheduled{namespace=~"sock-shop", container="kube-state-metrics", condition="false",}) by (pod) #1 is oke and 0 is not scheduled
+        cluster_ns_pod_status_unknown: sum(kube_pod_status_scheduled{namespace=~"sock-shop", container="kube-state-metrics", condition="unknown",}) by (pod)
+        cluster_ns_pod_status_ready_true: sum(kube_pod_status_ready{namespace=~"sock-shop", container="kube-state-metrics", condition="true",}) by (pod) #1 is oke and 0 is not scheduled
+        cluster_ns_pod_status_ready_false: sum(kube_pod_status_ready{namespace=~"sock-shop", container="kube-state-metrics", condition="false"}) by (pod) 
+        cluster_ns_pod_status_phase_pending: sum(kube_pod_status_phase{namespace=~"sock-shop", job=~"kube-state-metrics", pod=~".+", phase=~"Pending"}) by (pod)
+        cluster_ns_pod_status_phase_failed: sum(kube_pod_status_phase{namespace=~"sock-shop", job=~"kube-state-metrics", pod=~".+", phase=~"Failed"}) by (pod)
+        cluster_ns_pod_status_phase_running: sum(kube_pod_status_phase{namespace=~"sock-shop", job=~"kube-state-metrics", pod=~".+", phase=~"Running"}) by (pod)
+        cluster_ns_pod_status_phase_succeeded: sum(kube_pod_status_phase{namespace=~"sock-shop", job=~"kube-state-metrics", pod=~".+", phase=~"Succeeded"}) by (pod)
+        cluster_ns_pod_status_phase_unknown: sum(kube_pod_status_phase{namespace=~"sock-shop", job=~"kube-state-metrics", pod=~".+", phase=~"Unknown"}) by (pod)
+        cluster_ns_pod_status_reason_evicted: sum(kube_pod_status_reason{namespace=~"sock-shop", job=~"kube-state-metrics", reason="Evicted"}) by (pod)
+        cluster_ns_pod_status_reason_nodeaffinity: sum(kube_pod_status_reason{namespace=~"sock-shop", job=~"kube-state-metrics", reason="NodeAffinity"}) by (pod)
+        cluster_ns_pod_status_reason_nodelost: sum(kube_pod_status_reason{namespace=~"sock-shop", job=~"kube-state-metrics", reason="NodeLost"}) by (pod)
+        cluster_ns_pod_status_reason_shutdown: sum(kube_pod_status_reason{namespace=~"sock-shop", job=~"kube-state-metrics", reason="Shutdown"}) by (pod)
+        cluster_ns_pod_status_reason_unexpectedadmissionerror: sum(kube_pod_status_reason{namespace=~"sock-shop", job=~"kube-state-metrics", reason="UnexpectedAdmissionError"}) by (pod)
+    
     service:

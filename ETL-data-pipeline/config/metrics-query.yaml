@@ -1,0 +1,106 @@
+{
+    'compute_host': {
+            'host_cpu_utilization': 'sum(instance:node_cpu_utilisation:rate5m) by (instance)',
+            'host_cpu_rate_sum': 'sum(instance:node_cpu:rate:sum) by (instance)',
+            'host_load1_per_cpu': 'sum(instance:node_load1_per_cpu:ratio) by (instance)',
+            'host_mem_utilization': 'sum(instance:node_load1_per_cpu:ratio) by (instance)',
+            'host_netin_bytes_wo_lo': 'sum(instance:node_network_receive_bytes_excluding_lo:rate5m) by (instance)',
+            'host_netin_bytes_total': 'sum(instance:node_network_receive_bytes:rate:sum) by (instance)',
+            'host_netin_drop_wo_lo': 'sum(instance:node_network_receive_drop_excluding_lo:rate5m) by (instance)',
+            'host_netout_bytes_wo_lo': 'sum(instance:node_network_transmit_bytes_excluding_lo:rate5m) by (instance)',
+            'host_netout_bytes_total': 'sum(instance:node_network_transmit_bytes:rate:sum) by (instance)',
+            'host_netout_drop_wo_lo': 'sum(instance:node_network_transmit_drop_excluding_lo:rate5m) by (instance)',
+            'host_disk_io_time': 'sum(instance_device:node_disk_io_time_seconds:rate5m) by (instance)',
+            'host_disk_io_time_wght': 'sum(instance_device:node_disk_io_time_weighted_seconds:rate5m) by (instance)'
+    },
+
+    'cluster': {
+            'cluster': {
+                'cluster_MemUsage_Gib': 'sum(container_memory_working_set_bytes{id=~"/.*",instance=~"^.*$"})/1000000000',
+                'cluster_CPUUsage_pct': 'sum(rate(container_cpu_usage_seconds_total{id=~"/.*",instance=~"^.*$"}[5m]))',
+                'cluster_FSUsage_U': 'sum(rate(container_fs_usage_bytes{device=~"/dev/.*",id=~"/.*",instance=~"^.*$"}[5m]))',
+                'cluster_NetIn_kBs': 'sum(rate(container_network_receive_bytes_total{instance=~"^.*$"}[5m]))/1000',
+                'cluster_NetOut_kBs':  'sum(rate (container_network_transmit_bytes_total{instance=~"^.*$"}[5m]))/1000',
+                'cluster_PodCPUUsage_pct': 'sum(rate (container_cpu_usage_seconds_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[5m])) by (pod_name)',
+                'cluster_PodMemUsage_Gib': 'sum(container_memory_working_set_bytes{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}) by (pod_name)/1000000000',
+                'cluster_PodNetIn_kBs': 'sum(rate(container_network_receive_bytes_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[5m])) by (pod_name) /1000',
+                'cluster_PodNetOutt_kBs': 'sum(rate(container_network_transmit_bytes_total{image!="",name=~"^k8s_.*",kubernetes_io_hostname=~"^.*$"}[5m])) by (pod_name) /1000'
+
+            },
+
+            'instance': {
+                'cluster_instance_cpu_utilization': 'sum(instance:node_cpu_utilisation:rate5m) by (instance)',
+                'cluster_instance_cpu_rate_sum': 'sum(instance:node_cpu:rate:sum) by (instance)',
+                'cluster_instance_load1_per_cpu': 'sum(instance:node_load1_per_cpu:ratio) by (instance)',
+                'cluster_instance_mem_utilization': 'sum(instance:node_load1_per_cpu:ratio) by (instance)',
+                'cluster_instance_netin_bytes_wo_lo': 'sum(instance:node_network_receive_bytes_excluding_lo:rate5m) by (instance)',
+                'cluster_instance_netin_bytes_total': 'sum(instance:node_network_receive_bytes:rate:sum) by (instance)',
+                'cluster_instance_netin_drop_wo_lo': 'sum(instance:node_network_receive_drop_excluding_lo:rate5m) by (instance)',
+                'cluster_instance_netout_bytes_wo_lo': 'sum(instance:node_network_transmit_bytes_excluding_lo:rate5m) by (instance)',
+                'cluster_instance_netout_bytes_total': 'sum(instance:node_network_transmit_bytes:rate:sum) by (instance)',
+                'cluster_instance_netout_drop_wo_lo': 'sum(instance:node_network_transmit_drop_excluding_lo:rate5m) by (instance)',
+                'cluster_instance_disk_io_time': 'sum(instance_device:node_disk_io_time_seconds:rate5m) by (instance)',
+                'cluster_instance_disk_io_time_wght': 'sum(instance_device:node_disk_io_time_weighted_seconds:rate5m) by (instance)'
+                },
+
+            'name_space': {
+                'container': {
+                    'cluster_ns_container_cpu_usage': 'sum(rate(container_cpu_usage_seconds_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container) * 100', 
+                    'cluster_ns_container_cpu_cfs_periods_total': 'sum(rate(container_cpu_cfs_periods_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)',  
+                    'cluster_ns_container_cpu_cfs_throttled_periods_total': 'sum(rate(container_cpu_cfs_throttled_periods_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)',  
+
+                    'cluster_ns_container_mem_usage_bytes': 'sum(container_memory_usage_bytes{namespace=" + name + ", container=~".+", container!="POD"}) by (container)',
+                    'cluster_ns_container_mem_max_usage_bytes': 'sum(container_memory_max_usage_bytes{namespace=" + name + ", container=~".+", container!="POD"}) by (container)',  
+                    'cluster_ns_container_mem_rss_KiB': 'sum(container_memory_rss{namespace=" + name + ", container=~".+", container!="POD"}) by (container)',
+                    'cluster_ns_container_mem_working_set_bytes': 'sum(container_memory_working_set_bytes{namespace=" + name + ", container=~".+", container!="POD"}) by (container)',
+                    'cluster_ns_container_mem_cache_KiB': 'sum(container_memory_cache{namespace=" + name + ", container=~".+", container!="POD"}) by (container)',
+                    'cluster_ns_container_mem_failures_total': 'sum(rate(container_memory_failures_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)',
+                    'cluster_ns_container_memory_failcnt': 'sum(rate(container_memory_failcnt{namespace=" + name + ", container=~".+", container!="POD"}[60m])) by (container)',
+
+                    'cluster_ns_container_fs_inodes_free': 'sum(container_fs_inodes_free{namespace=" + name + ", container=~".+", container!="POD"}) by (container)',
+                    'cluster_ns_container_fs_inodes_total': 'sum(container_fs_inodes_total{namespace=" + name + ", container=~".+", container!="POD"}) by (container)', 
+                    'cluster_ns_container_usage_bytes': 'sum(container_fs_usage_bytes{namespace=" + name + ", container=~".+", container!="POD"}) by (container)',
+                    'cluster_ns_container_fs_reads_total': 'sum(rate(container_fs_reads_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
+                    'cluster_ns_container_fs_reads_bytes_total': 'sum(rate(container_fs_reads_bytes_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
+                    'cluster_ns_container_fs_read_seconds_total': 'sum(rate(container_fs_read_seconds_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
+                    'cluster_ns_container_fs_writes_total': 'sum(rate(container_fs_writes_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
+                    'cluster_ns_container_fs_writes_bytes_total': 'sum(rate(container_fs_writes_bytes_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
+                    'cluster_ns_container_fs_write_seconds_total': 'sum(rate(container_fs_write_seconds_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
+
+                    'cluster_ns_container_network_receive_bytes_total': 'sum(rate(container_network_receive_bytes_total{namespace=" + name + ", name=~".+"}[5m])) by (name)',  
+                    'cluster_ns_container_network_receive_errors_total': 'sum(rate(container_network_receive_errors_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
+                    'cluster_ns_container_network_receive_packets_dropped_total': 'sum(rate(container_network_receive_packets_dropped_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
+                    'cluster_ns_container_network_receive_packets_total': 'sum(rate(container_network_receive_packets_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
+                    'cluster_ns_container_network_transmit_bytes_total': 'sum(rate(container_network_transmit_bytes_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
+                    'cluster_ns_container_network_transmit_errors_total': 'sum(rate(container_network_transmit_errors_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
+                    'cluster_ns_container_network_transmit_packets_dropped_total': 'sum(rate(container_network_transmit_packets_dropped_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
+                    'cluster_ns_container_network_transmit_packets_total': 'sum(rate(container_network_transmit_packets_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
+                    
+                    'cluster_ns_container_status_restarts_total': 'sum(kube_pod_container_status_restarts_total{namespace=" + name + ", container=~".+"})) by (container)', 
+                    'cluster_ns_container_status_restarts_1h': 'sum(rate(kube_pod_container_status_restarts_total{namespace=" + name + ", container=~".+"}[60m])) by (container)', 
+                    'cluser_ns_container_status_ready': 'sum(kube_pod_container_status_ready{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)',
+                    'cluster_ns_container_status_running': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)', 
+                    'cluster_ns_container_status_waiting': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)',
+                    'cluster_ns_container_status_terminated': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)' 
+                },
+
+                'pod': {
+                    'cluster_ns_pod_status_scheduled': 'sum(kube_pod_status_scheduled{namespace=~" + name + ", container="kube-state-metrics", condition="true"}) by (pod)',
+                    'cluster_ns_pod_status_unscheduled': 'sum(kube_pod_status_scheduled{namespace=~" + name + ", container="kube-state-metrics", condition="false",}) by (pod)', #1 is oke and 0 is not scheduled
+                    'cluster_ns_pod_status_unknown': 'sum(kube_pod_status_scheduled{namespace=~" + name + ", container="kube-state-metrics", condition="unknown",}) by (pod)',
+                    'cluster_ns_pod_status_ready_true': 'sum(kube_pod_status_ready{namespace=~" + name + ", container="kube-state-metrics", condition="true",}) by (pod)', #1 is oke and 0 is not scheduled
+                    'cluster_ns_pod_status_ready_false': 'sum(kube_pod_status_ready{namespace=~" + name + ", container="kube-state-metrics", condition="false"}) by (pod)', 
+                    'cluster_ns_pod_status_phase_pending': 'sum(kube_pod_status_phase{namespace=~" + name + ", job=~"kube-state-metrics", pod=~".+", phase=~"Pending"}) by (pod)',
+                    'cluster_ns_pod_status_phase_failed': 'sum(kube_pod_status_phase{namespace=~" + name + ", job=~"kube-state-metrics", pod=~".+", phase=~"Failed"}) by (pod)',
+                    'cluster_ns_pod_status_phase_running': 'sum(kube_pod_status_phase{namespace=~" + name + ", job=~"kube-state-metrics", pod=~".+", phase=~"Running"}) by (pod)',
+                    'cluster_ns_pod_status_phase_succeeded': 'sum(kube_pod_status_phase{namespace=~" + name + ", job=~"kube-state-metrics", pod=~".+", phase=~"Succeeded"}) by (pod)',
+                    'cluster_ns_pod_status_phase_unknown': 'sum(kube_pod_status_phase{namespace=~" + name + ", job=~"kube-state-metrics", pod=~".+", phase=~"Unknown"}) by (pod)',
+                    'cluster_ns_pod_status_reason_evicted': 'sum(kube_pod_status_reason{namespace=~" + name + ", job=~"kube-state-metrics", reason="Evicted"}) by (pod)',
+                    'cluster_ns_pod_status_reason_nodeaffinity': 'sum(kube_pod_status_reason{namespace=~" + name + ", job=~"kube-state-metrics", reason="NodeAffinity"}) by (pod)',
+                    'cluster_ns_pod_status_reason_nodelost': 'sum(kube_pod_status_reason{namespace=~" + name + ", job=~"kube-state-metrics", reason="NodeLost"}) by (pod)',
+                    'cluster_ns_pod_status_reason_shutdown': 'sum(kube_pod_status_reason{namespace=~" + name + ", job=~"kube-state-metrics", reason="Shutdown"}) by (pod)',
+                    'cluster_ns_pod_status_reason_unexpectedadmissionerror': 'sum(kube_pod_status_reason{namespace=~" + name + ", job=~"kube-state-metrics", reason="UnexpectedAdmissionError"}) by (pod)'
+                }
+            }
+    }
+}
