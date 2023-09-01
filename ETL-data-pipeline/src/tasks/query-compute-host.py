@@ -1,9 +1,19 @@
 import requests
 import json
-import time
+import time, datetime
 import sys
 import csv
+from io import BytesIO
+from minio import Minio
 
+def warehouse_connection():
+    client = Minio("192.168.24.20:30256",
+                    access_key="XwMptXNrhYWMHj99",
+                    secret_key="Uatsl7MkYaJVrABZAXRTXfQzbzJ9IwlW",
+                    secure=False,
+    )
+    
+    return client
 
 def compute_host_query(URL):
     """
@@ -51,17 +61,31 @@ def compute_host_query(URL):
 
 
 URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
-metrics_name = [ 'instance', 'host_cpu_utilization', 'host_cpu_rate_sum', 'host_load1_per_cpu', 'host_mem_utilization', 'host_netin_bytes_wo_lo',  'host_netin_bytes_total', 'host_netin_drop_wo_lo', 'host_netout_bytes_wo_lo',\
+metrics_name = ['instance', 'host_cpu_utilization', 'host_cpu_rate_sum', 'host_load1_per_cpu', 'host_mem_utilization', 'host_netin_bytes_wo_lo',  'host_netin_bytes_total', 'host_netin_drop_wo_lo', 'host_netout_bytes_wo_lo',\
                      'host_netout_bytes_total', 'host_netout_drop_wo_lo', 'host_disk_io_time', 'host_disk_io_time_wght', 'timestamp']
+
 data = compute_host_query(URL)
-with open('compute_host_data', 'w') as f:
+file_name = 'compute_host_data.csv'
+
+with open(file_name, 'w') as f:
          write = csv.writer(f)
          write.writerow(metrics_name)
 
-         for seq in range (0, 3):
+         for seq in range (0, 2):
             data = compute_host_query(URL)
+            # print(data)
             write.writerows(data)
             sys.stdout.flush()
             time.sleep(15)
+        
+minioClient = warehouse_connection()
+
+date = datetime.datetime.now()
+path = str(date.strftime("%Y")) + date.strftime("%m") + date.strftime("%d")
+print(path)
+minioClient.fput_object('compute-host', path, "compute_host_data.csv", content_type='application/csv')
+
+
+
          
 
