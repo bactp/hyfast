@@ -3,7 +3,7 @@ import json
 import time, datetime
 import sys
 import csv
-from io import BytesIO
+import os
 from minio import Minio
 
 def warehouse_connection():
@@ -85,8 +85,8 @@ minioClient = warehouse_connection()
 date = datetime.datetime.now()
 
 path = "cluster-instance/" + str(date.strftime("%Y")) + date.strftime("%m") + date.strftime("%d")
-minioClient.fput_object('cluster-central', path, file_name, content_type='application/csv')
-
+minioClient.fput_object(cluster_name, path, file_name, content_type='application/csv')
+os.remove(file_name)
 
 
          

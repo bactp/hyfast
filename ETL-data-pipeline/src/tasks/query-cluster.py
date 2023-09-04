@@ -3,7 +3,7 @@ import json
 import time, datetime
 import sys
 import csv
-from io import BytesIO
+import os
 from minio import Minio
 
 def warehouse_connection():
@@ -53,7 +53,6 @@ metrics_name = ['cluster_MemUsage_Gib', 'cluster_CPUUsage_pct', 'cluster_FSUsage
 
 cluster_name = "central-cluster"
 
-
 file_name = cluster_name + '_data.csv'
 with open(file_name, 'w') as f:
          write = csv.writer(f)
@@ -65,16 +64,11 @@ with open(file_name, 'w') as f:
             rows.append(data)
             write.writerows(rows)
             sys.stdout.flush()
-            time.sleep(15)
+            time.sleep(10)
             
 minioClient = warehouse_connection()
 
 date = datetime.datetime.now()
 path = "cluster/" + str(date.strftime("%Y")) + date.strftime("%m") + date.strftime("%d")
-print(path)
-minioClient.fput_object('cluster-central', path, file_name, content_type='application/csv')
-
-
-
-         
-
+minioClient.fput_object('central-cluster', path, file_name, content_type='application/csv')
+os.remove(file_name)

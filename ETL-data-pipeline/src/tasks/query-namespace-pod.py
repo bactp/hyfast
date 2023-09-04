@@ -3,7 +3,7 @@ import json
 import time, datetime
 import sys
 import csv
-from io import BytesIO
+import os
 from minio import Minio
 
 def warehouse_connection():
@@ -43,7 +43,7 @@ def cluster_instance_pod_query(URL, cluster_name, namespace):
     rows = []
     r0 = requests.get(url = URL, headers = headers, params = {'query': cluster_namespace_pod_metrics['cluster_ns_pod_status_scheduled']})
     r0_json = r0.json()['data']['result']
-    print(r0_json)
+    # print(r0_json)
     for result in r0_json:
         l = []
         l.append(result['metric'].get('pod', ''))
@@ -73,7 +73,7 @@ metrics_name = ['pod', 'cluster_ns_pod_status_scheduled', 'cluster_ns_pod_status
 cluster_name = "central-cluster"
 name_space = "kube-system"
 
-file_name = cluster_name + name_space + '_pod' + '_data.csv'
+file_name = cluster_name + '_' + name_space + '_pod' + '_data.csv'
 
 with open(file_name, 'w') as f:
          write = csv.writer(f)
@@ -90,10 +90,9 @@ minioClient = warehouse_connection()
 
 date = datetime.datetime.now()
 
-path = "cluster-name-space-pod/" + str(date.strftime("%Y")) + date.strftime("%m") + date.strftime("%d")
-minioClient.fput_object('cluster-central', path, file_name, content_type='application/csv')
-
-
+path = "cluster-namespace-pod/" + str(date.strftime("%Y")) + date.strftime("%m") + date.strftime("%d")
+minioClient.fput_object(cluster_name, path, file_name, content_type='application/csv')
+os.remove(file_name)
 
          
 

@@ -66,6 +66,13 @@
                     'cluster_ns_container_fs_writes_total': 'sum(rate(container_fs_writes_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
                     'cluster_ns_container_fs_writes_bytes_total': 'sum(rate(container_fs_writes_bytes_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
                     'cluster_ns_container_fs_write_seconds_total': 'sum(rate(container_fs_write_seconds_total{namespace=" + name + ", container=~".+", container!="POD"}[30m])) by (container)', 
+                    
+                    'cluster_ns_container_status_restarts_total': 'sum(kube_pod_container_status_restarts_total{namespace=" + name + ", container=~".+"}) by (container)', 
+                    'cluster_ns_container_status_restarts_1h': 'sum(rate(kube_pod_container_status_restarts_total{namespace=" + name + ", container=~".+"}[60m])) by (container)', 
+                    'cluser_ns_container_status_ready': 'sum(kube_pod_container_status_ready{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)',
+                    'cluster_ns_container_status_running': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)', 
+                    'cluster_ns_container_status_waiting': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)',
+                    'cluster_ns_container_status_terminated': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)',
 
                     'cluster_ns_container_network_receive_bytes_total': 'sum(rate(container_network_receive_bytes_total{namespace=" + name + ", name=~".+"}[5m])) by (name)',  
                     'cluster_ns_container_network_receive_errors_total': 'sum(rate(container_network_receive_errors_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
@@ -74,14 +81,7 @@
                     'cluster_ns_container_network_transmit_bytes_total': 'sum(rate(container_network_transmit_bytes_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
                     'cluster_ns_container_network_transmit_errors_total': 'sum(rate(container_network_transmit_errors_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
                     'cluster_ns_container_network_transmit_packets_dropped_total': 'sum(rate(container_network_transmit_packets_dropped_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
-                    'cluster_ns_container_network_transmit_packets_total': 'sum(rate(container_network_transmit_packets_total{namespace=" + name + ", name=~".+"}[5m])) by (name)', 
-                    
-                    'cluster_ns_container_status_restarts_total': 'sum(kube_pod_container_status_restarts_total{namespace=" + name + ", container=~".+"})) by (container)', 
-                    'cluster_ns_container_status_restarts_1h': 'sum(rate(kube_pod_container_status_restarts_total{namespace=" + name + ", container=~".+"}[60m])) by (container)', 
-                    'cluser_ns_container_status_ready': 'sum(kube_pod_container_status_ready{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)',
-                    'cluster_ns_container_status_running': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)', 
-                    'cluster_ns_container_status_waiting': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)',
-                    'cluster_ns_container_status_terminated': 'sum(kube_pod_container_status_running{namespace=" + name + ", container=~".+", job=~"kube-state-metrics"}) by (container)' 
+                    'cluster_ns_container_network_transmit_packets_total': 'sum(rate(container_network_transmit_packets_total{namespace=" + name + ", name=~".+"}[5m])) by (name)' 
                 },
 
                 'pod': {
