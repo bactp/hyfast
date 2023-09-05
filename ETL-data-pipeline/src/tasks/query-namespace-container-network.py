@@ -36,7 +36,6 @@ def cluster_namespace_container_net_query(URL, cluster_name, namespace):
     rows = []
     r0 = requests.get(url = URL, headers = headers, params = {'query': cluster_namespace_container_network_metrics['cluster_ns_container_network_receive_bytes_total']})
     r0_json = r0.json()['data']['result']
-    # print(r0_json)
     for result in r0_json:
         l = []
         l.append(result['metric'].get('name', ''))
