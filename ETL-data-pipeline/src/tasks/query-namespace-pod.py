@@ -43,7 +43,6 @@ def cluster_instance_pod_query(URL, cluster_name, namespace):
     rows = []
     r0 = requests.get(url = URL, headers = headers, params = {'query': cluster_namespace_pod_metrics['cluster_ns_pod_status_scheduled']})
     r0_json = r0.json()['data']['result']
-    # print(r0_json)
     for result in r0_json:
         l = []
         l.append(result['metric'].get('pod', ''))
@@ -64,35 +63,65 @@ def cluster_instance_pod_query(URL, cluster_name, namespace):
                 row = row + 1     
     return rows
 
+def create_new_csv(metrics_name, cluster_name, name_space):
+    current_date = datetime.datetime.now().strftime("%Y%m%d")
+    file_name = f"{cluster_name}_{name_space}_pod_data_{current_date}.csv"
+    with open(file_name, mode='w', newline='') as f:
+            write = csv.writer(f)
+            write.writerow(metrics_name)
+    return file_name
 
 URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
-metrics_name = ['pod', 'cluster_ns_pod_status_scheduled', 'cluster_ns_pod_status_unscheduled', 'cluster_ns_pod_status_unknown', 'cluster_ns_pod_status_ready_true', 'cluster_ns_pod_status_ready_false', 'cluster_ns_pod_status_phase_pending', 'cluster_ns_pod_status_phase_failed' \
-                , 'cluster_ns_pod_status_phase_running', 'cluster_ns_pod_status_phase_succeeded', 'cluster_ns_pod_status_phase_unknown', 'cluster_ns_pod_status_reason_evicted', 'cluster_ns_pod_status_reason_nodeaffinity', 'cluster_ns_pod_status_reason_nodelost', 'cluster_ns_pod_status_reason_shutdown', 'cluster_ns_pod_status_reason_unexpectedadmissionerror', 'timestamp' ]
+metrics_name = ['pod', 'cluster_ns_pod_status_scheduled', 
+                'cluster_ns_pod_status_unscheduled', 'cluster_ns_pod_status_unknown', 
+                'cluster_ns_pod_status_ready_true', 'cluster_ns_pod_status_ready_false', 
+                'cluster_ns_pod_status_phase_pending', 'cluster_ns_pod_status_phase_failed',
+                'cluster_ns_pod_status_phase_running', 'cluster_ns_pod_status_phase_succeeded', 
+                'cluster_ns_pod_status_phase_unknown', 'cluster_ns_pod_status_reason_evicted', 
+                'cluster_ns_pod_status_reason_nodeaffinity', 'cluster_ns_pod_status_reason_nodelost', 
+                'cluster_ns_pod_status_reason_shutdown', 'cluster_ns_pod_status_reason_unexpectedadmissionerror', 
+                'timestamp' ]
+
+cluster_name = 'central-cluster' #declare as name of the cluster in container image
+name_space = 'kube-system'  #declare as name of namespace in container image
+
+current_day = None
+csv_file_name = None
 
 
-cluster_name = "central-cluster"
-name_space = "kube-system"
+while True:
+    """ Query data every 10 seconds """
+    
+    now = datetime.datetime.now()
+    current_date = now.strftime("%Y%m%d")
 
-file_name = cluster_name + '_' + name_space + '_pod' + '_data.csv'
+    # Check if the day has changed
+    if current_date != current_day:
+        if csv_file_name:
+            print(f"Closing file: {csv_file_name}")
+            current_day = current_date
 
-with open(file_name, 'w') as f:
-         write = csv.writer(f)
-         write.writerow(metrics_name)
+            #Upload to storage
+            minioClient = warehouse_connection()
+            path = cluster_name + "_" + name_space + "_pod_data/" + current_day
+            minioClient.fput_object(cluster_name, path, csv_file_name, content_type='application/csv')
+            print(f"File: {csv_file_name} is uploaded to storage")
+            os.remove(csv_file_name)
 
-         for seq in range (0, 2):
-            data = cluster_instance_pod_query(URL, cluster_name, name_space)
-            # print(data)
-            write.writerows(data)
-            sys.stdout.flush()
-            time.sleep(15)
-        
-minioClient = warehouse_connection()
+            csv_file_name = None
 
-date = datetime.datetime.now()
+        # Create a new CSV file
+        csv_file_name = create_new_csv(metrics_name, cluster_name, name_space)
+        print(f"New file created: {csv_file_name}")
 
-path = "cluster-namespace-pod/" + str(date.strftime("%Y")) + date.strftime("%m") + date.strftime("%d")
-minioClient.fput_object(cluster_name, path, file_name, content_type='application/csv')
-os.remove(file_name)
+    # Simulate writing data to the CSV file
+    with open(csv_file_name, mode='a', newline='') as f:
+                write = csv.writer(f)
+                data = cluster_instance_pod_query(URL, cluster_name, name_space)
+                write.writerows(data)
+                
+    current_day = current_date
+    time.sleep(10)
 
          
 

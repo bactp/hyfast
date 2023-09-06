@@ -1,7 +1,6 @@
 import requests
 import json
 import time, datetime
-import sys
 import csv
 import os
 from minio import Minio
@@ -60,29 +59,61 @@ def compute_host_query(URL):
     return rows
 
 
+def create_new_csv(metrics_name):
+    current_date = datetime.datetime.now().strftime("%Y%m%d")
+    file_name = f"compute_host_data_{current_date}.csv"
+    with open(file_name, mode='w', newline='') as f:
+            write = csv.writer(f)
+            write.writerow(metrics_name)
+    return file_name
+
+
 URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
-metrics_name = ['instance', 'host_cpu_utilization', 'host_cpu_rate_sum', 'host_load1_per_cpu', 'host_mem_utilization', 'host_netin_bytes_wo_lo',  'host_netin_bytes_total', 'host_netin_drop_wo_lo', 'host_netout_bytes_wo_lo',\
-                     'host_netout_bytes_total', 'host_netout_drop_wo_lo', 'host_disk_io_time', 'host_disk_io_time_wght', 'timestamp']
+metrics_name = ['instance', 'host_cpu_utilization', 'host_cpu_rate_sum', 
+                'host_load1_per_cpu', 'host_mem_utilization', 'host_netin_bytes_wo_lo',  
+                'host_netin_bytes_total', 'host_netin_drop_wo_lo', 'host_netout_bytes_wo_lo',
+                'host_netout_bytes_total', 'host_netout_drop_wo_lo', 'host_disk_io_time',
+                'host_disk_io_time_wght', 'timestamp']
 
 
-file_name = "compute_host_data.csv"
+current_day = None
+csv_file_name = None
 
-with open(file_name, 'w') as f:
-        write = csv.writer(f)
-        write.writerow(metrics_name)
+while True:
+    """ Query data every 10 seconds """
 
-        for seq in range (0, 2):
-            data = compute_host_query(URL)
-            write.writerows(data)
-            sys.stdout.flush()
-            time.sleep(10)
-            
-minioClient = warehouse_connection()
+    now = datetime.datetime.now()
+    current_date = now.strftime("%Y%m%d")
 
-date = datetime.datetime.now()
-path = str(date.strftime("%Y")) + date.strftime("%m") + date.strftime("%d")
-minioClient.fput_object('compute-host', path, file_name, content_type='application/csv')
-os.remove(file_name)
+    # Check if the day has changed
+    if current_date != current_day:
+        if csv_file_name:
+            print(f"Closing file: {csv_file_name}")
+            current_day = current_date
+
+            #Upload to storage
+            minioClient = warehouse_connection()
+            path = current_day
+            minioClient.fput_object('compute-host', path, csv_file_name, content_type='application/csv')
+            print(f"File: {csv_file_name} is uploaded to storage")
+            os.remove(csv_file_name)
+
+            csv_file_name = None
+
+        # Create a new CSV file
+        csv_file_name = create_new_csv(metrics_name)
+        print(f"New file created: {csv_file_name}")
+
+    # Simulate writing data to the CSV file
+    with open(csv_file_name, mode='a', newline='') as f:
+                write = csv.writer(f)
+                data = compute_host_query(URL)
+                write.writerows(data)
+                
+    current_day = current_date
+    time.sleep(10)
+
+
 
 
 

@@ -59,34 +59,64 @@ def cluster_instance_query(URL, cluster_name):
                 row = row + 1     
     return rows
 
+def create_new_csv(metrics_name):
+    current_date = datetime.datetime.now().strftime("%Y%m%d")
+    file_name = f"{cluster_name}_instance_data_{current_date}.csv"
+    with open(file_name, mode='w', newline='') as f:
+            write = csv.writer(f)
+            write.writerow(metrics_name)
+    return file_name
+
 
 URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
-metrics_name = ['instance', 'cluster_instance_cpu_utilization', 'cluster_instance_cpu_rate_sum', 'cluster_instance_load1_per_cpu', 'cluster_instance_mem_utilization', 'cluster_instance_netin_bytes_wo_lo', 'cluster_instance_netin_bytes_total', 'cluster_instance_netin_drop_wo_lo' \
-                , 'cluster_instance_netout_bytes_wo_lo', 'cluster_instance_netout_bytes_total', 'cluster_instance_netout_drop_wo_lo', 'cluster_instance_disk_io_time', 'cluster_instance_disk_io_time_wght', 'timestamp']
+metrics_name = ['instance', 'cluster_instance_cpu_utilization', 
+                'cluster_instance_cpu_rate_sum', 'cluster_instance_load1_per_cpu', 
+                'cluster_instance_mem_utilization', 'cluster_instance_netin_bytes_wo_lo', 
+                'cluster_instance_netin_bytes_total', 'cluster_instance_netin_drop_wo_lo',
+                'cluster_instance_netout_bytes_wo_lo', 'cluster_instance_netout_bytes_total',
+                'cluster_instance_netout_drop_wo_lo', 'cluster_instance_disk_io_time', 
+                'cluster_instance_disk_io_time_wght', 'timestamp']
 
 
-cluster_name = "central-cluster"
+cluster_name = 'central-cluster' #declared in the docker file
 
-file_name = cluster_name + '_instance' + '_data.csv'
+current_day = None
+csv_file_name = None
 
-with open(file_name, 'w') as f:
-         write = csv.writer(f)
-         write.writerow(metrics_name)
+while True:
+    """ Query data every 10 seconds """
+    
+    now = datetime.datetime.now()
+    current_date = now.strftime("%Y%m%d")
 
-         for seq in range (0, 2):
-            data = cluster_instance_query(URL, cluster_name)
-            # print(data)
-            write.writerows(data)
-            sys.stdout.flush()
-            time.sleep(15)
-        
-minioClient = warehouse_connection()
+    # Check if the day has changed
+    if current_date != current_day:
+        if csv_file_name:
+            print(f"Closing file: {csv_file_name}")
+            current_day = current_date
 
-date = datetime.datetime.now()
+            #Upload to storage
+            minioClient = warehouse_connection()
+            path =  cluster_name + "_instance_data/" + current_day
+            minioClient.fput_object(cluster_name, path, csv_file_name, content_type='application/csv')
+            print(f"File: {csv_file_name} is uploaded to storage")
+            os.remove(csv_file_name)
 
-path = "cluster-instance/" + str(date.strftime("%Y")) + date.strftime("%m") + date.strftime("%d")
-minioClient.fput_object(cluster_name, path, file_name, content_type='application/csv')
-os.remove(file_name)
+            csv_file_name = None
+
+        # Create a new CSV file
+        csv_file_name = create_new_csv(metrics_name)
+        print(f"New file created: {csv_file_name}")
+
+    # Simulate writing data to the CSV file
+    with open(csv_file_name, mode='a', newline='') as f:
+                write = csv.writer(f)
+                data = cluster_instance_query(URL, cluster_name)
+                write.writerows(data)
+                
+    current_day = current_date
+    time.sleep(10)
+
 
 
          
