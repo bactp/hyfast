@@ -71,7 +71,7 @@ def create_new_csv(metrics_name, cluster_name, name_space):
             write.writerow(metrics_name)
     return file_name
 
-URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
+
 metrics_name = ['pod', 'cluster_ns_pod_status_scheduled', 
                 'cluster_ns_pod_status_unscheduled', 'cluster_ns_pod_status_unknown', 
                 'cluster_ns_pod_status_ready_true', 'cluster_ns_pod_status_ready_false', 
@@ -82,8 +82,10 @@ metrics_name = ['pod', 'cluster_ns_pod_status_scheduled',
                 'cluster_ns_pod_status_reason_shutdown', 'cluster_ns_pod_status_reason_unexpectedadmissionerror', 
                 'timestamp' ]
 
-cluster_name = 'central-cluster' #declare as name of the cluster in container image
-name_space = 'kube-system'  #declare as name of namespace in container image
+URL = os.getenv("URL")
+cluster_name =  os.getenv("CLUSTER_NAME") #declare as name of the cluster in container image
+name_space = os.getenv("NAME_SPACE") #declare as name of namespace in container image
+
 
 current_day = None
 csv_file_name = None
