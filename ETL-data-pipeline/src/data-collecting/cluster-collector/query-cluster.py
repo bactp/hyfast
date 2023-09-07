@@ -55,13 +55,14 @@ def create_new_csv(metrics_name):
     return file_name
 
 
-URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
+URL = os.getenv("URL")
 metrics_name = ['cluster_MemUsage_Gib', 'cluster_CPUUsage_pct', 
                 'cluster_FSUsage_U', 'cluster_NetIn_kBs', 'cluster_NetOut_kBs',  
                 'cluster_PodCPUUsage_pct', 'cluster_PodMemUsage_Gib', 'cluster_PodNetIn_kBs',
                 'cluster_PodNetOutt_kBs', 'timestamp', 'cluster_name']
 
-cluster_name = 'central-cluster' #declare as name of the cluster in container image
+cluster_name = os.getenv("CLUSTER_NAME") #declare as name of the cluster in container image
+
 current_day = None
 csv_file_name = None
 
