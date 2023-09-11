@@ -1,0 +1,39 @@
+compute-host-collector:
+  deploymentName: app-2
+  replicas: 2
+  containerImage: my-image:2.0
+  envVar1: valueA
+  envVar2: valueB
+
+cluster-collector:
+  deploymentName: "data-center1-cluser-collector" #cluster_name_cluster_collector
+  containerImage: phuongbac/cluster-collector #cluster-collector image
+  url: value1 #query_URL
+  cluster_name: value2 #cluser_name
+
+cluster-instance-collector:
+  deploymentName: "data-center1-cluster"
+  containerImage: phuongbac/cluster-instance-collector
+  url: valueA
+  cluser_name: valueB
+
+namespace-container-collector:
+  deploymentName: app-2
+  replicas: 2
+  containerImage: my-image:2.0
+  envVar1: valueA
+  envVar2: valueB
+
+namespace-container-net-collector:
+  deploymentName: app-2
+  replicas: 2
+  containerImage: my-image:2.0
+  envVar1: valueA
+  envVar2: valueB
+
+namespace-pod-collector:
+  deploymentName: app-2
+  replicas: 2
+  containerImage: my-image:2.0
+  envVar1: valueA
+  envVar2: valueB

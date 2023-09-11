@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.deploymentName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.deploymentName }}
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.deploymentName }}
+    spec:
+      containers:
+        - name: collector
+          image: {{ .Values.containerImage }}
+          ports:
+            - containerPort: 9090
+          env:
+            - name: URL  # Name of the environment variable in the container
+              value:  {{ .Values.url }} #"http://192.168.24.20:31179/prometheus/api/v1/query"  # Set the value here
+            - name: CLUSTER_NAME
+              value: {{ .Values.cluster_name }} #"central-cluster"
