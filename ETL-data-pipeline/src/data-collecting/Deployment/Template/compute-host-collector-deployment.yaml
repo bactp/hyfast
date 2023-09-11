@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: compute-host-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: compute-host-collector
+  template:
+    metadata:
+      labels:
+        app: compute-host-collector
+    spec:
+      containers:
+        - name: compute-host-collector
+          image: phuongbac/compute-host-collector
+          ports:
+            - containerPort: 9090
+          env:
+            - name: URL  # Name of the environment variable in the container
+              value: "http://192.168.24.20:31179/prometheus/api/v1/query"  # Set the value here

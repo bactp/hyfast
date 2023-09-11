@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: central-cluster-cluster-instance-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: central-cluster-cluster-instance-collector
+  template:
+    metadata:
+      labels:
+        app: central-cluster-cluster-instance-collector
+    spec:
+      containers:
+        - name: central-cluster-cluster-instance-collector
+          image: phuongbac/cluster-instance-collector
+          ports:
+            - containerPort: 9090
+          env:
+            - name: URL  # Name of the environment variable in the container
+              value: "http://192.168.24.20:31179/prometheus/api/v1/query"  # Set the value here
+            - name: CLUSTER_NAME
+              value: "central-cluster"
