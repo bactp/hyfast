@@ -69,10 +69,13 @@ def cluster_namespace_container_query(URL, cluster_name, namespace):
                 l = []
                 l.append(result['value'][1])
                 rows[row].append(l[0])
-                ts = []
-                ts.append(time.time())
-                rows[row].append(ts[0])
+                # ts = []
+                # ts.append(time.time())
+                # rows[row].append(ts[0])
                 row = row + 1     
+    for row in rows:
+        ts = str(time.time())
+        row.append(ts)
     return rows
 
 
@@ -103,6 +106,10 @@ metrics_name = ['container', 'cluster_ns_container_cpu_usage', 'cluster_ns_conta
 URL = os.getenv("URL")
 cluster_name =  os.getenv("CLUSTER_NAME") #declare as name of the cluster in container image
 name_space = os.getenv("NAME_SPACE") #declare as name of namespace in container image
+
+# URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
+# cluster_name = "central-cluster"
+# name_space = "kube-system"
 
 current_day = None
 csv_file_name = None

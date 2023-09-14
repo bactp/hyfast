@@ -52,10 +52,13 @@ def compute_host_query(URL):
                 l.append(result['value'][1])
                 rows[row].append(l[0])
                 # rows.append(l[0])
-                ts = []
-                ts.append(time.time())
-                rows[row].append(ts[0])
-                row = row + 1     
+                # ts = []
+                # ts.append(time.time())
+                # rows[row].append(ts[0])
+                row = row + 1
+    for row in rows:
+        ts = str(time.time())
+        row.append(ts)     
     return rows
 
 
@@ -69,6 +72,7 @@ def create_new_csv(metrics_name):
 
 
 URL = os.getenv("URL")
+# URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
 metrics_name = ['instance', 'host_cpu_utilization', 'host_cpu_rate_sum', 
                 'host_load1_per_cpu', 'host_mem_utilization', 'host_netin_bytes_wo_lo',  
                 'host_netin_bytes_total', 'host_netin_drop_wo_lo', 'host_netout_bytes_wo_lo',

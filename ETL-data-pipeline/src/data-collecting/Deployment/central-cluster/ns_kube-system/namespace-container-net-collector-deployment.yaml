@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: central-cluster-namespace-container-network-collector
+  name: central-cluster-kube-system-container-network-collector
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: central-cluster-namespace-container-network-collector
+      app: central-cluster-kube-system-container-network-collector
   template:
     metadata:
       labels:
-        app: central-cluster-namespace-container-network-collector
+        app: central-cluster-kube-system-container-network-collector
     spec:
       containers:
-        - name: central-cluster-namespace-container-network-collector
-          image: phuongbac/namespace-container-network-collector
+        - name: central-cluster-kube-system-container-network-collector
+          image: phuongbac/namespace-container-net-collector
           ports:
             - containerPort: 9090
           env:

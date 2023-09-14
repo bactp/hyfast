@@ -37,7 +37,7 @@ def cluster_instance_query(URL, cluster_name):
     rows = []
     r0 = requests.get(url = URL, headers = headers, params = {'query': cluster_instance_metrics['cluster_instance_cpu_utilization']})
     r0_json = r0.json()['data']['result']
-    
+
     for result in r0_json:
         l = []
         l.append(result['metric'].get('instance', ''))
@@ -52,15 +52,12 @@ def cluster_instance_query(URL, cluster_name):
                 l.append(result['value'][1])
                 rows[row].append(l[0])
                 # rows.append(l[0])
-                # ts = []
-                # ts.append(time.time())
-                # rows[row].append(ts[0])
                 row = row + 1
-    
+
     for row in rows:
         ts = str(time.time())
         row.append(ts)
-                        
+    
     return rows
 
 def create_new_csv(metrics_name):
@@ -82,11 +79,10 @@ metrics_name = ['instance', 'cluster_instance_cpu_utilization',
                 'cluster_instance_disk_io_time_wght', 'timestamp']
 
 
-URL = os.getenv("URL")
-cluster_name = os.getenv("CLUSTER_NAME") 
-
-# URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
-# cluster_name = "central-cluster"
+# URL = os.getenv("URL")
+# cluster_name = os.getenv("CLUSTER_NAME") 
+URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
+cluster_name = "central-cluster"
 
 current_day = None
 csv_file_name = None

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: data-center1-sock-shop-container-network-collector
-          image: phuongbac/namespace-container-network-collector
+          image: phuongbac/namespace-container-net-collector
           ports:
             - containerPort: 9090
           env:

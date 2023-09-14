@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: central-cluster-kube-system-namespace-pod-collector
+  name: central-cluster-kube-system-pod-collector
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: central-cluster-kube-system-namespace-pod-collector
+      app: central-cluster-kube-system-pod-collector
   template:
     metadata:
       labels:
-        app: central-cluster-kube-system-namespace-pod-collector
+        app: central-cluster-kube-system-pod-collector
     spec:
       containers:
-        - name: central-cluster-kube-system-namespace-pod-collector
+        - name: central-cluster-kube-system-pod-collector
           image: phuongbac/namespace-pod-collector
           ports:
             - containerPort: 9090
