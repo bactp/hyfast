@@ -28,10 +28,10 @@ def check_objects(minio_client, bucket_name, prefix, objects):
     """
     new_objects = []
     training_objects = list_objects(minio_client, bucket_name, prefix)
-    date_names = [i.split("/")[1].split(".")[0] for i in training_objects] # eg: 20230908
+    date_names = [i.split("/")[-1].split(".")[0] for i in training_objects] # eg: 20230908
     
     for obj in objects:
-        if obj.split("/")[1] not in date_names:
+        if obj not in date_names:
             new_objects.append(obj)
 
     return new_objects
@@ -61,25 +61,26 @@ def process_data(minio_client, object_name):
     Returns:
         list of pd.DataFrame: Processed data as a Pandas DataFrame for each instance.
     """
-    COLS = ['cluster_instance_cpu_utilization',
-            'cluster_instance_cpu_rate_sum',
-            'cluster_instance_load1_per_cpu',
-            'cluster_instance_mem_utilization',
-            'cluster_instance_netin_bytes_wo_lo',
-            'cluster_instance_netin_bytes_total',
-            'cluster_instance_netin_drop_wo_lo',
-            'cluster_instance_netout_bytes_wo_lo',
-            'cluster_instance_netout_bytes_total',
-            'cluster_instance_netout_drop_wo_lo',
-            'cluster_instance_disk_io_time',
-            'cluster_instance_disk_io_time_wght']
+    COLS = ['host_cpu_utilization',
+            'host_cpu_rate_sum',
+            'host_load1_per_cpu',
+            'host_mem_utilization',
+            'host_netin_bytes_wo_lo',
+            'host_netin_bytes_total',
+            'host_netin_drop_wo_lo',
+            'host_netout_bytes_wo_lo',
+            'host_netout_bytes_total',
+            'host_netout_drop_wo_lo',
+            'host_disk_io_time',
+            'host_disk_io_time_wght']
     
-    csv_name = f'{PREFIX}_{object_name.split("/")[1]}.csv'
+    csv_name = f'{BUCKET}_{object_name}.csv'
     data = minio_client.fget_object(BUCKET, object_name, csv_name)
     df = pd.read_csv(f"./{csv_name}")
+    df = df.fillna(0)
 
     instances = set(df.instance.values)
-    scaler = joblib.load("./central_cluster_instance_scaler.joblib")
+    scaler = joblib.load("./compute_host_scaler.joblib")
 
     df_list = []
     grouped = df.groupby(df.instance)
@@ -106,7 +107,7 @@ def push_bucket(minio_client, df, object_name):
         False if pushed unsuccessfully
     """
     instance = list(set(df.instance.values))[0]
-    csv_name = f'{SAVED_BUCKET_PREFIX}/{object_name.split("/")[1]}_{instance}.csv' # central-cluster_instance_data_training/20230908_192.168.24.61:9100.csv
+    csv_name = f'{instance}/{object_name}.csv' # compute-host-training/192.168.24.21:9100/20230908.csv
 
     # Convert the DataFrame to a CSV string
     csv_data = df.to_csv(index=False).encode('utf-8')
