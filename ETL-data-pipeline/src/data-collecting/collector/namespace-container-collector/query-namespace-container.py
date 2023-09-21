@@ -23,34 +23,34 @@ def cluster_namespace_container_query(URL, cluster_name, namespace):
     headers = {'X-Scope-OrgID': cluster_name}
     name =  namespace
     cluster_namespace_container_metrics = {
-            'cluster_ns_container_cpu_usage': 'sum(rate(container_cpu_usage_seconds_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container) * 100', 
-            'cluster_ns_container_cpu_cfs_periods_total': 'sum(rate(container_cpu_cfs_periods_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)',  
-            'cluster_ns_container_cpu_cfs_throttled_periods_total': 'sum(rate(container_cpu_cfs_throttled_periods_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)',  
+            'cluster_ns_container_cpu_usage': 'sum(rate(container_cpu_usage_seconds_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container) * 100', 
+            # 'cluster_ns_container_cpu_cfs_periods_total': 'sum(rate(container_cpu_cfs_periods_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container)',  #
+            # 'cluster_ns_container_cpu_cfs_throttled_periods_total': 'sum(rate(container_cpu_cfs_throttled_periods_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container)',  #
 
             'cluster_ns_container_mem_usage_bytes': 'sum(container_memory_usage_bytes{namespace="' + name + '", container=~".+", container!="POD"}) by (container)',
             'cluster_ns_container_mem_max_usage_bytes': 'sum(container_memory_max_usage_bytes{namespace="' + name + '", container=~".+", container!="POD"}) by (container)',  
             'cluster_ns_container_mem_rss_KiB': 'sum(container_memory_rss{namespace="' + name + '", container=~".+", container!="POD"}) by (container)',
             'cluster_ns_container_mem_working_set_bytes': 'sum(container_memory_working_set_bytes{namespace="' + name + '", container=~".+", container!="POD"}) by (container)',
             'cluster_ns_container_mem_cache_KiB': 'sum(container_memory_cache{namespace="' + name + '", container=~".+", container!="POD"}) by (container)',
-            'cluster_ns_container_mem_failures_total': 'sum(rate(container_memory_failures_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)',
+            'cluster_ns_container_mem_failures_total': 'sum(rate(container_memory_failures_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container)',
             'cluster_ns_container_memory_failcnt': 'sum(rate(container_memory_failcnt{namespace="' + name + '", container=~".+", container!="POD"}[60m])) by (container)',
 
             'cluster_ns_container_fs_inodes_free': 'sum(container_fs_inodes_free{namespace="' + name + '", container=~".+", container!="POD"}) by (container)',
             'cluster_ns_container_fs_inodes_total': 'sum(container_fs_inodes_total{namespace="' + name + '", container=~".+", container!="POD"}) by (container)', 
             'cluster_ns_container_usage_bytes': 'sum(container_fs_usage_bytes{namespace="' + name + '", container=~".+", container!="POD"}) by (container)',
-            'cluster_ns_container_fs_reads_total': 'sum(rate(container_fs_reads_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)', 
-            'cluster_ns_container_fs_reads_bytes_total': 'sum(rate(container_fs_reads_bytes_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)', 
-            'cluster_ns_container_fs_read_seconds_total': 'sum(rate(container_fs_read_seconds_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)', 
+            'cluster_ns_container_fs_reads_total': 'sum(rate(container_fs_reads_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container)', 
+            # 'cluster_ns_container_fs_reads_bytes_total': 'sum(rate(container_fs_reads_bytes_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container)', #
+            'cluster_ns_container_fs_read_seconds_total': 'sum(rate(container_fs_read_seconds_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container)', 
             'cluster_ns_container_fs_writes_total': 'sum(rate(container_fs_writes_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)', 
-            'cluster_ns_container_fs_writes_bytes_total': 'sum(rate(container_fs_writes_bytes_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)', 
-            'cluster_ns_container_fs_write_seconds_total': 'sum(rate(container_fs_write_seconds_total{namespace="' + name + '", container=~".+", container!="POD"}[30m])) by (container)', 
+            # 'cluster_ns_container_fs_writes_bytes_total': 'sum(rate(container_fs_writes_bytes_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container)', #
+            'cluster_ns_container_fs_write_seconds_total': 'sum(rate(container_fs_write_seconds_total{namespace="' + name + '", container=~".+", container!="POD"}[5m])) by (container)', 
             
             'cluster_ns_container_status_restarts_total': 'sum(kube_pod_container_status_restarts_total{namespace="' + name + '", container=~".+"}) by (container)', 
             'cluster_ns_container_status_restarts_1h': 'sum(rate(kube_pod_container_status_restarts_total{namespace="' + name + '", container=~".+"}[60m])) by (container)', 
             'cluser_ns_container_status_ready': 'sum(kube_pod_container_status_ready{namespace="' + name + '", container=~".+", job=~"kube-state-metrics"}) by (container)',
             'cluster_ns_container_status_running': 'sum(kube_pod_container_status_running{namespace="' + name + '", container=~".+", job=~"kube-state-metrics"}) by (container)', 
             'cluster_ns_container_status_waiting': 'sum(kube_pod_container_status_running{namespace="' + name + '", container=~".+", job=~"kube-state-metrics"}) by (container)',
-            'cluster_ns_container_status_terminated': 'sum(kube_pod_container_status_running{namespace="' + name + '", container=~".+", job=~"kube-state-metrics"}) by (container)',
+            'cluster_ns_container_status_terminated': 'sum(kube_pod_container_status_running{namespace="' + name + '", container=~".+", job=~"kube-state-metrics"}) by (container)'
             }
     
     rows = []
@@ -88,19 +88,33 @@ def create_new_csv(metrics_name, cluster_name, name_space):
     return file_name
 
 
-metrics_name = ['container', 'cluster_ns_container_cpu_usage', 'cluster_ns_container_cpu_cfs_periods_total', 
-                'cluster_ns_container_cpu_cfs_throttled_periods_total', 'cluster_ns_container_mem_usage_bytes', 
-                'cluster_ns_container_mem_max_usage_bytes', 'cluster_ns_container_mem_rss_KiB', 
-                'cluster_ns_container_mem_working_set_bytes', 'cluster_ns_container_mem_cache_KiB', 
-                'cluster_ns_container_mem_failures_total', 'cluster_ns_container_memory_failcnt', 
-                'cluster_ns_container_fs_inodes_free', 'cluster_ns_container_fs_inodes_total', 
-                'cluster_ns_container_usage_bytes', 'cluster_ns_container_fs_reads_total', 
-                'cluster_ns_container_fs_reads_bytes_total', 'cluster_ns_container_fs_read_seconds_total',
-                'cluster_ns_container_fs_writes_total','cluster_ns_container_fs_writes_bytes_total', 
-                'cluster_ns_container_fs_write_seconds_total', 'cluster_ns_container_status_restarts_total', 
-                'cluster_ns_container_status_restarts_1h', 'cluser_ns_container_status_ready', 
-                'cluster_ns_container_status_running', 'cluster_ns_container_status_waiting', 
-                'cluster_ns_container_status_terminated', 'timestamp' ]
+metrics_name = ['container',
+                'cluster_ns_container_cpu_usage',
+                # 'cluster_ns_container_cpu_cfs_periods_total', 
+                # 'cluster_ns_container_cpu_cfs_throttled_periods_total',
+                'cluster_ns_container_mem_usage_bytes', 
+                'cluster_ns_container_mem_max_usage_bytes',
+                'cluster_ns_container_mem_rss_KiB', 
+                'cluster_ns_container_mem_working_set_bytes',
+                'cluster_ns_container_mem_cache_KiB', 
+                'cluster_ns_container_mem_failures_total',
+                'cluster_ns_container_memory_failcnt', 
+                'cluster_ns_container_fs_inodes_free',
+                'cluster_ns_container_fs_inodes_total', 
+                'cluster_ns_container_usage_bytes',
+                'cluster_ns_container_fs_reads_total', 
+                # 'cluster_ns_container_fs_reads_bytes_total',
+                'cluster_ns_container_fs_read_seconds_total',
+                'cluster_ns_container_fs_writes_total',
+                # 'cluster_ns_container_fs_writes_bytes_total', 
+                'cluster_ns_container_fs_write_seconds_total',
+                'cluster_ns_container_status_restarts_total', 
+                'cluster_ns_container_status_restarts_1h',
+                'cluser_ns_container_status_ready', 
+                'cluster_ns_container_status_running',
+                'cluster_ns_container_status_waiting', 
+                'cluster_ns_container_status_terminated',
+                'timestamp' ]
 
 
 URL = os.getenv("URL")
