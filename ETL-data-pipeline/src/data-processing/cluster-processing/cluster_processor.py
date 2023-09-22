@@ -29,6 +29,7 @@ def check_objects(minio_client, bucket_name, prefix, objects):
     new_objects = []
     training_objects = list_objects(minio_client, bucket_name, prefix)
     date_names = [i.split("/")[1].split(".")[0] for i in training_objects] # eg: 20230908
+    date_names = set(date_names)
     
     for obj in objects:
         if obj.split("/")[1] not in date_names:
@@ -61,12 +62,24 @@ def process_data(minio_client, object_name):
     Returns:
         pd.DataFrame: Processed data as a Pandas DataFrame.
     """
+    COLS = ['cluster_MemUsage_Gib',
+            'cluster_CPUUsage_pct',
+            'cluster_FSUsage_U',
+            'cluster_NetIn_kBs',
+            'cluster_NetOut_kBs',
+            'cluster_PodCPUUsage_pct',
+            'cluster_PodMemUsage_Gib',
+            'cluster_PodNetIn_kBs',
+            'cluster_PodNetOutt_kBs']
+    
     csv_name = f'{PREFIX}_{object_name.split("/")[1]}.csv'
     data = minio_client.fget_object(BUCKET, object_name, csv_name)
     df = pd.read_csv(f"./{csv_name}")
+    df = df.fillna(0)
+    
     scaler = joblib.load("./central_cluster_scaler.joblib")
 
-    scaled_df = pd.DataFrame(scaler.transform(df.drop(['cluster_name', 'timestamp'], axis=1)), columns=df.columns[:-2])
+    scaled_df = pd.DataFrame(scaler.transform(df.drop(['cluster_name', 'timestamp'], axis=1)), columns=COLS)
     scaled_df['cluster_name'] = df['cluster_name']
     scaled_df['timestamp'] = df['timestamp']
 
