@@ -11,6 +11,7 @@ def load_gen(start, stop, seconds) -> list:
 
 load_list = []
 
+#number of request
 load_thresh = [(200, 516),
                (201, 271),
                (271, 501),
@@ -19,7 +20,7 @@ load_thresh = [(200, 516),
                (271, 516),
                (516, 961),
                (317, 959)]
-
+#time to generate (from 0h to 4:30 gen random from load_thresh)
 time_segment = [(tdt(hours=0), tdt(hours=4, minutes=30)),
                 (tdt(hours=4, minutes=30), tdt(hours=8)),
                 (tdt(hours=8), tdt(hours=10)),
