@@ -1,3 +1,10 @@
 *.csv
 lib/*
-share/*
+share
+hyfast-py/*
+pyvenv.cfg
+lib64*
+bin*
+include
+lib
+__pycache__
