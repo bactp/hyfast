@@ -29,8 +29,8 @@ load_thresh = [(30, 50),  #0-0:10
                 (150, 200),   #12:30-16
                 (70, 110), #16-18:30
                 (40, 65), #18:30-20:30
-                (200, 250), #20:30-22:30
-                (240, 300)] #22:30-24
+                (100, 150), #20:30-22:30
+                (150, 200)] #22:30-24
         
 time_segment = [(tdt(hours=0), tdt(hours=0, minutes=10)),
                 (tdt(hours=0, minutes=10), tdt(hours=1, minutes=30)),
@@ -50,11 +50,11 @@ for ts, lt in zip(time_segment, load_thresh):
     
 
 
-# cluster_name = os.getenv("CLUSTER_NAME")
-# name_space = os.getenv("NAME_SPACE")
+cluster_name = os.getenv("CLUSTER_NAME")
+name_space = os.getenv("NAME_SPACE")
 
-cluster_name = "data-center2"
-name_space = "sock-shop"
+# cluster_name = "data-center2"
+# name_space = "sock-shop"
 
 now = datetime.datetime.now()
 current_date = now.strftime("%Y%m%d")
