@@ -5,7 +5,8 @@ while true; do
     python3 /app/traffic_pattern_gen.py
 
     # Run the second Python file to read and print each element from the list
-    locust -f /app/locustfile.py -H http://192.168.24.249:30001/
+    locust -f /app/locustfile.py 
+    # locust --host=http://192.168.24.249:30001/ -f /app/locustfile.py   --no-web
 
     #remove the last pattern file
     rm num_reqs.csv
