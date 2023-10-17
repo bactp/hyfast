@@ -24,7 +24,7 @@ def compute_host_query(URL):
             'host_cpu_utilization': 'sum(instance:node_cpu_utilisation:rate5m) by (instance)',
             'host_cpu_rate_sum': 'sum(instance:node_cpu:rate:sum) by (instance)',
             'host_load1_per_cpu': 'sum(instance:node_load1_per_cpu:ratio) by (instance)',
-            'host_mem_utilization': 'sum(instance:node_load1_per_cpu:ratio) by (instance)',
+            'host_mem_utilization': 'sum(instance:node_memory_utilisation:ratio) by (instance)',
             'host_netin_bytes_wo_lo': 'sum(instance:node_network_receive_bytes_excluding_lo:rate5m) by (instance)',
             'host_netin_bytes_total': 'sum(instance:node_network_receive_bytes:rate:sum) by (instance)',
             'host_netin_drop_wo_lo': 'sum(instance:node_network_receive_drop_excluding_lo:rate5m) by (instance)',
