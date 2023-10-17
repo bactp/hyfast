@@ -1,15 +1,25 @@
 #!/bin/bash
-
 while true; do
+    pid="$(sudo netstat -nlp | awk '$4~":'"8089"'"{ gsub(/\/.*/,"",$7); print $7 }')"
+    if [[ 0 -lt $pid  ]]
+    then
+        sudo kill -9 $pid
+    fi
+   
     # Run the first Python file to generate a random list with 100 elements    
+    
     python3 /app/traffic_pattern_gen.py
 
     # Run the second Python file to read and print each element from the list
-    locust -f /app/locustfile.py 
-    # locust --host=http://192.168.24.249:30001/ -f /app/locustfile.py   --no-web
+    nohup locust -f  /app/locustfile.py --host=http://192.168.24.249:30001/ &
+    
+    sleep 20
 
-    #remove the last pattern file
-    rm num_reqs.csv
-    # Add a delay (e.g., 5 seconds) before re-running the process
-    sleep 3
+    echo $"ready"
+    
+    curl -XPOST http://192.168.24.20:30002/swarm 
+    
+    sleep 86520
+
 done
+
