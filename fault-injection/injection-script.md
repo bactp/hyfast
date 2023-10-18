@@ -27,7 +27,9 @@ stress-ng --iomix 2 --iomix-bytes 10% -t 10m
 The --brk (expand heap break point), --stack (expand stack), --bigheap stressors try to rapidly consume memory
 
 ```
-stress-ng --brk 2 --stack 2 --bigheap 2 -t 60s --metrics-brief stress-ng --brk 5 --stack 5 --bigheap 5 -t 180s --metrics-brief stress-ng --brk 4 --stack 4 --bigheap 4 -t 180s --metrics-brief
+stress-ng --brk 2 --stack 2 --bigheap 2 -t 60s --metrics-brief 
+stress-ng --brk 5 --stack 5 --bigheap 5 -t 180s --metrics-brief 
+stress-ng --brk 4 --stack 4 --bigheap 4 -t 180s --metrics-brief
 ```
 virtual mem start 2 workers spinning on anonymous mmap, allocate 1G bytes per vm worker, allocate 2x2G for vm + 2x2G for mmap
 
