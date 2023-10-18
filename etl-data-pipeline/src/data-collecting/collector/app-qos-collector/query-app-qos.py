@@ -15,34 +15,45 @@ def warehouse_connection():
     
     return client
 
-def app_qos_query(URL, cluster_name, namespace, destination_workload):
+def app_qos_query(URL, cluster_name, namespace):
     """
     query metrics for each compute host by each host
     compute_host_cluster_URL: http://192.168.40.232:31270/api/v1/query
     """
     headers = {'X-Scope-OrgID': cluster_name}
     ns =  namespace
-    dest = destination_workload
     app_qos_metrics = {
-            'request_per_second': 'round(sum(irate(istio_requests_total{reporter=~"destination",destination_workload_namespace=~"'+ ns + '",destination_workload=~"' + dest +'"}[5m])), 0.001)',
-            'incoming_success_rate': 'sum(irate(istio_requests_total{reporter=~"destination",destination_workload_namespace=~"' + ns + '",destination_workload=~"' + dest +'", response_code!~"5.*"}[5m])) / \
-                                      sum(irate(istio_requests_total{reporter=~"destination",destination_workload_namespace=~"'+ ns +'",destination_workload=~"' + dest +'"}[5m]))',
-            'latency': '(histogram_quantile(0.95, sum(irate(istio_request_duration_milliseconds_bucket{reporter=~"destination",destination_workload=~"' + dest +'", destination_workload_namespace=~"' + ns + '"}[5m])) by (le)) / 1000) or histogram_quantile(0.95, sum(irate(istio_request_duration_seconds_bucket{reporter=~"destination",destination_workload=~"' + dest + '", destination_workload_namespace=~"'+ ns + '"}[5m])) by (le))',
+            'request_per_second': 'sum(irate(istio_requests_total{reporter=~"destination",destination_workload_namespace=~"'+ ns + '"}[5m])) by (destination_workload)',
+            'incoming_success_rate': 'sum(irate(istio_requests_total{reporter=~"destination",destination_workload_namespace=~"' + ns + '", response_code!~"5.*"}[5m])) by (destination_workload) / \
+                                      sum(irate(istio_requests_total{reporter=~"destination",destination_workload_namespace=~"'+ ns +'"}[5m])) by (destination_workload)',
+            'latency': '(histogram_quantile(0.95, sum(irate(istio_request_duration_milliseconds_bucket{reporter=~"destination", destination_workload_namespace=~"' + ns + '"}[5m])) by (destination_workload,le)) / 1000) or histogram_quantile(0.95, sum(irate(istio_request_duration_seconds_bucket{reporter=~"destination", destination_workload_namespace=~"'+ ns + '"}[5m])) by (destination_workload, le))',
             }
     
     rows = []
+    r0 = requests.get(url = URL, headers = headers, params = {'query': app_qos_metrics['request_per_second']})
+    r0_json = r0.json()['data']['result']
+    
+    for result in r0_json:
+        l = []
+        l.append(result['metric'].get('destination_workload', ''))
+        rows.append(l)
+    
     for metric_name, metric_value in app_qos_metrics.items():
         r1 = requests.get(URL, headers=headers, params={'query': metric_value})
         r1_json = r1.json()['data']['result']
         
-        value = r1_json[0]['value'][1]
-        rows.append(value)
+        row = 0
+        for result in r1_json:
+                l = []
+                l.append(result['value'][1])
+                rows[row].append(l[0])
+                row = row + 1
+    for row in rows:
+        ts = str(time.time())
+        row.append(ts)
     
-    ts = str(time.time())
-    rows.append(ts)
     return rows
     
-    return rows
 
 def create_new_csv(metrics_name, cluster_name, name_space,):
     current_date = datetime.datetime.now().strftime("%Y%m%d")
@@ -53,7 +64,8 @@ def create_new_csv(metrics_name, cluster_name, name_space,):
     return file_name
 
 
-metrics_name = ['request_per_second',
+metrics_name = ['service_name',
+                'request_per_second',
                 'incoming_success_rate',
                 'latency',
                 'timestamp' ]
@@ -61,12 +73,11 @@ metrics_name = ['request_per_second',
 URL = os.getenv("URL")
 cluster_name =  os.getenv("CLUSTER_NAME") #declare as name of the cluster in container image
 name_space = os.getenv("NAME_SPACE") #declare as name of namespace in container image
-destination_workload = os.getenv("DEST_WORKLOAD")
 
 # URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
 # cluster_name = "data-center1"
 # name_space = "sock-shop"
-# destination_workload = "front-end"
+
 
 current_day = None
 csv_file_name = None
@@ -100,10 +111,8 @@ while True:
     # Simulate writing data to the CSV file
     with open(csv_file_name, mode='a', newline='') as f:
                 write = csv.writer(f)
-                rows =  []
-                data = app_qos_query(URL, cluster_name, name_space, destination_workload)
-                rows.append(data)
-                write.writerows(rows)
+                data = app_qos_query(URL, cluster_name, name_space)
+                write.writerows(data)
                 
     current_day = current_date
     time.sleep(10)
