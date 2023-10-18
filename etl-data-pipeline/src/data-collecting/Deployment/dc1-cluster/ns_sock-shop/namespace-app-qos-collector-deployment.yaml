@@ -24,7 +24,5 @@ spec:
               value: "data-center1"
             - name: NAME_SPACE
               value: "sock-shop"
-            - name: DEST_WORKLOAD
-              value: "front-end"
 
 
