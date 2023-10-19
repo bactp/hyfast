@@ -70,36 +70,39 @@ csv_file_name = None
 
 while True:
     """ Query data every 10 seconds """
-    
-    now = datetime.datetime.now()
-    current_date = now.strftime("%Y%m%d")
+    try:
+        now = datetime.datetime.now()
+        current_date = now.strftime("%Y%m%d")
 
-    # Check if the day has changed
-    if current_date != current_day:
-        if csv_file_name:
-            print(f"Closing file: {csv_file_name}")
-            current_day = current_date
+        # Check if the day has changed
+        if current_date != current_day:
+            if csv_file_name:
+                print(f"Closing file: {csv_file_name}")
+                current_day = current_date
 
-            #Upload to storage
-            minioClient = warehouse_connection()
-            path = cluster_name + "_data/" + current_day
-            minioClient.fput_object(cluster_name, path, csv_file_name, content_type='application/csv')
-            print(f"File: {csv_file_name} is uploaded to storage")
-            os.remove(csv_file_name)
+                #Upload to storage
+                minioClient = warehouse_connection()
+                path = cluster_name + "_data/" + current_day
+                minioClient.fput_object(cluster_name, path, csv_file_name, content_type='application/csv')
+                print(f"File: {csv_file_name} is uploaded to storage")
+                os.remove(csv_file_name)
 
-            csv_file_name = None
+                csv_file_name = None
 
-        # Create a new CSV file
-        csv_file_name = create_new_csv(metrics_name)
-        print(f"New file created: {csv_file_name}")
+            # Create a new CSV file
+            csv_file_name = create_new_csv(metrics_name)
+            print(f"New file created: {csv_file_name}")
 
-    # Simulate writing data to the CSV file
-    with open(csv_file_name, mode='a', newline='') as f:
-                write = csv.writer(f)
-                rows =  []
-                data = cluster_query(URL, cluster_name)
-                rows.append(data)
-                write.writerows(rows)
-                
-    current_day = current_date
-    time.sleep(10)
+        # Simulate writing data to the CSV file
+        with open(csv_file_name, mode='a', newline='') as f:
+                    write = csv.writer(f)
+                    rows =  []
+                    data = cluster_query(URL, cluster_name)
+                    rows.append(data)
+                    write.writerows(rows)
+                    
+        current_day = current_date
+        time.sleep(10)
+    except Exception as e:
+            print("reconnecting to endpoints")
+            time.sleep(15)

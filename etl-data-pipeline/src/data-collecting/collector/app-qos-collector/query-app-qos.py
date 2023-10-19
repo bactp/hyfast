@@ -71,13 +71,13 @@ metrics_name = ['service_name',
                 'latency',
                 'timestamp' ]
 
-# URL = os.getenv("URL")
-# cluster_name =  os.getenv("CLUSTER_NAME") #declare as name of the cluster in container image
-# name_space = os.getenv("NAME_SPACE") #declare as name of namespace in container image
+URL = os.getenv("URL")
+cluster_name =  os.getenv("CLUSTER_NAME") #declare as name of the cluster in container image
+name_space = os.getenv("NAME_SPACE") #declare as name of namespace in container image
 
-URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
-cluster_name = "data-center1"
-name_space = "sock-shop"
+# URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
+# cluster_name = "data-center1"
+# name_space = "sock-shop"
 
 
 current_day = None

@@ -122,44 +122,48 @@ cluster_name =  os.getenv("CLUSTER_NAME") #declare as name of the cluster in con
 name_space = os.getenv("NAME_SPACE") #declare as name of namespace in container image
 
 # URL = "http://192.168.24.20:31179/prometheus/api/v1/query"
-# cluster_name = "central-cluster"
-# name_space = "kube-system"
+# cluster_name = "data-center1"
+# name_space = "sock-shop"
 
 current_day = None
 csv_file_name = None
 
 
 while True:
-    now = datetime.datetime.now()
-    current_date = now.strftime("%Y%m%d")
+    try: 
+        now = datetime.datetime.now()
+        current_date = now.strftime("%Y%m%d")
 
-    # Check if the day has changed
-    if current_date != current_day:
-        if csv_file_name:
-            print(f"Closing file: {csv_file_name}")
-            current_day = current_date
+        # Check if the day has changed
+        if current_date != current_day:
+            if csv_file_name:
+                print(f"Closing file: {csv_file_name}")
+                current_day = current_date
 
-            #Upload to storage
-            minioClient = warehouse_connection()
-            path = cluster_name + "_" + name_space + "_container_data/" + current_day
-            minioClient.fput_object(cluster_name, path, csv_file_name, content_type='application/csv')
-            print(f"File: {csv_file_name} is uploaded to storage")
-            os.remove(csv_file_name)
+                #Upload to storage
+                minioClient = warehouse_connection()
+                path = cluster_name + "_" + name_space + "_container_data/" + current_day
+                minioClient.fput_object(cluster_name, path, csv_file_name, content_type='application/csv')
+                print(f"File: {csv_file_name} is uploaded to storage")
+                os.remove(csv_file_name)
 
-            csv_file_name = None
+                csv_file_name = None
 
-        # Create a new CSV file
-        csv_file_name = create_new_csv(metrics_name, cluster_name, name_space)
-        print(f"New file created: {csv_file_name}")
+            # Create a new CSV file
+            csv_file_name = create_new_csv(metrics_name, cluster_name, name_space)
+            print(f"New file created: {csv_file_name}")
 
-    # Simulate writing data to the CSV file
-    with open(csv_file_name, mode='a', newline='') as f:
-                write = csv.writer(f)
-                data = cluster_namespace_container_query(URL, cluster_name, name_space)
-                write.writerows(data)
-                
-    current_day = current_date
-    time.sleep(10)
+        # Simulate writing data to the CSV file
+        with open(csv_file_name, mode='a', newline='') as f:
+                    write = csv.writer(f)
+                    data = cluster_namespace_container_query(URL, cluster_name, name_space)
+                    write.writerows(data)
+                    
+        current_day = current_date
+        time.sleep(10)
+    except Exception as e:
+            print("reconnecting to endpoints")
+            time.sleep(15)
 
 
          
