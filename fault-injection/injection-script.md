@@ -57,7 +57,8 @@ Add latency on network interface tc qdisc add dev ens3 root netem delay 500ms
 
 ### latency
 ```
-tc qdisc del dev ens3 root netem
+tc qdisc add dev ens3 root netem delay 200ms
+tc qdisc del dev ens3 root netem delay 200ms
 ```
 ### Traffic drop
 
