@@ -1,0 +1,1 @@
+docker build -t compute-host-collector . && docker tag compute-host-collector phuongbac/compute-host-collector && docker push phuongbac/compute-host-collector

@@ -1,0 +1,1 @@
+docker build -t namespace-container-net-collector . && docker tag namespace-container-net-collector phuongbac/namespace-container-net-collector && docker push phuongbac/namespace-container-net-collector
