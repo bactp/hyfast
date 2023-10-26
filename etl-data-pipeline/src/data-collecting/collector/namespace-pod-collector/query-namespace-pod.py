@@ -82,7 +82,7 @@ metrics_name = ['pod', 'cluster_ns_pod_status_scheduled',
                 'cluster_ns_pod_status_phase_running', 'cluster_ns_pod_status_phase_succeeded', 
                 'cluster_ns_pod_status_phase_unknown', 'cluster_ns_pod_status_reason_evicted', 
                 'cluster_ns_pod_status_reason_nodeaffinity', 'cluster_ns_pod_status_reason_nodelost', 
-                'cluster_ns_pod_status_reason_shutdown', 'cluster_ns_pod_status_reason_unexpectedadmissionerror', 
+                'cluster_ns_pod_status_reason_shutdown', 'cluster_ns_pod_stsum(container_memory_working_set_bytes{id=~"/.*",instance=~"^.*$"})/1000000000atus_reason_unexpectedadmissionerror', 
                 'timestamp' ]
 
 URL = os.getenv("URL")
