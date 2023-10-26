@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: dc2-traffic-gen
-        image: phuongbac/traffic-gen
+        image: phuongbac/traffic-generator
         ports:
         - containerPort: 8089
         env:
@@ -29,6 +29,10 @@ spec:
           value: "data-center2"
         - name: NAME_SPACE
           value: "sock-shop"
+        - name: TARGET_HOST
+          value: http://192.168.24.249:30001/
+        - name: SVC_PORT
+          value: "30002"
 ---
 apiVersion: v1
 kind: Service

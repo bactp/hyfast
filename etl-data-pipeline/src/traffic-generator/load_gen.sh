@@ -11,13 +11,13 @@ while true; do
     python3 /app/traffic_pattern_gen.py
 
     # Run the second Python file to read and print each element from the list
-    nohup locust -f  /app/locustfile.py --host=http://192.168.24.249:30001/ &
+    nohup locust -f  /app/locustfile.py --host="$TARGET_HOST" &
     
     sleep 20
 
     echo $"ready"
     
-    curl -XPOST http://192.168.24.20:30002/swarm 
+    curl -XPOST http://192.168.24.20:"$SVC_PORT"/swarm 
     
     sleep 86520
 

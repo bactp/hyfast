@@ -7,7 +7,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Set environment variables
 ENV CLUSTER_NAME = value1 \
-    NAME_SPACE = value2
+    NAME_SPACE = value2 \
+    TARGET_HOST = value3
 
 # Copy your Python code into the container
 COPY locustfile.py /app/locustfile.py
