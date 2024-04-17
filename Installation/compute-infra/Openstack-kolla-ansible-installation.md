@@ -208,7 +208,7 @@ Add config defaut network, gateway and router
 ```
 
 if [[ $ENABLE_EXT_NET -eq 1 ]]; then
-   $KOLLA_OPENSTACK_COMMAND network create --external --provider-physical-netwwork physnet1 --provider-network-type flat public1
+   $KOLLA_OPENSTACK_COMMAND network create --external --provider-physical-network physnet1 --provider-network-type flat public1
    $KOLLA_OPENSTACK_COMMAND subnet create --dhcp --allocation-pool ${EXT_NET_RANGE} --network public1 --subnet-range ${EXT_NET_CIRD} --gateway ${EXT_NET_GATEWAY} --dns-nameserver 8.8.8.8 public1-subnet
    $KOLLA_OPENSTACK_COMMAND router set --external-gateway public1 demo-router
 fi
