@@ -45,7 +45,8 @@ pip install -U pip
 ```
 4. Install Ansible.
 ```
-pip install 'ansible-core>=2.13,<=2.14.2'
+# pip install 'ansible-core>=2.13,<=2.14.2'
+pip install 'ansible-core>=2.15,<2.16.99'
 pip install 'ansible>=6,<8'
 ```
 
